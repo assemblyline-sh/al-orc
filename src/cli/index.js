@@ -14,6 +14,11 @@ import yargs from 'yargs';
 import { setOrgOverride } from './config-store.js';
 import { buildConfigSubcommands } from './config/index.js';
 import { buildStationsSubcommands } from './stations/index.js';
+import { buildWorkRecordsSubcommands } from './work-records/index.js';
+import { buildTagsSubcommands } from './tags/index.js';
+import { buildSupportingDocsSubcommands } from './supporting-docs/index.js';
+import { safe } from './_helpers.js';
+import { statusHandler } from './status.js';
 
 export function run(argv) {
   return yargs(argv)
@@ -29,6 +34,15 @@ export function run(argv) {
     })
     .command('config <resource>', 'Manage credential profiles (alias: orgs)', buildConfigSubcommands)
     .command('stations <action>', 'Query and run stations (orchestrator definitions)', buildStationsSubcommands)
+    .command('work-records <action>', 'Query and manage work records', buildWorkRecordsSubcommands)
+    .command('tags <action>', 'Manage tags', buildTagsSubcommands)
+    .command('supporting-docs <action>', 'View and download supporting documents', buildSupportingDocsSubcommands)
+    .command(
+      'status',
+      'Check connectivity to the orchestrator (active profile)',
+      (y) => y.option('json', { describe: 'Output raw JSON', type: 'boolean' }),
+      safe(statusHandler),
+    )
     .demandCommand(1, 'Specify a resource. Try `fob-orc --help`.')
     .strict()
     .help()
