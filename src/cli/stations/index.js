@@ -13,6 +13,9 @@ import { showStationHandler } from './show.js';
 import { runStationHandler } from './run.js';
 import { archiveStationHandler, unarchiveStationHandler } from './archive.js';
 import { deleteStationHandler } from './delete.js';
+import { editStationHandler } from './edit.js';
+import { pullStationsHandler } from './pull.js';
+import { pushStationsHandler } from './push.js';
 
 export function buildStationsSubcommands(yargs) {
   return yargs
@@ -40,13 +43,44 @@ export function buildStationsSubcommands(yargs) {
     )
     .command(
       'run <id>',
-      'Trigger an orchestrator run (extra --key=value flags become per-run step overrides)',
+      'Trigger an orchestrator run (--scenario <name> + extra --key=value flags become per-run step overrides)',
       (y) =>
         y
           .positional('id', { describe: 'Station ID or short_code', type: 'string' })
+          .option('scenario', { describe: 'Apply a local station scenario (.orchestrator/scenarios/stations/<code>/)', type: 'string' })
           .option('item', { describe: 'Item ID (legacy; item is being deprecated)', type: 'string' })
           .option('json', { describe: 'Output raw JSON', type: 'boolean' }),
       safe(runStationHandler),
+    )
+    .command(
+      'edit <id>',
+      'Set a station short_code and/or add/remove tags',
+      (y) =>
+        y
+          .positional('id', { describe: 'Station ID or short_code', type: 'string' })
+          .option('short-code', { describe: 'Set the short_code (empty string clears it)', type: 'string' })
+          .option('add-tag', { describe: 'Tag name to add (repeatable)', type: 'string', array: true })
+          .option('remove-tag', { describe: 'Tag name to remove (repeatable)', type: 'string', array: true }),
+      safe(editStationHandler),
+    )
+    .command(
+      'pull [id]',
+      'Pull station definitions to .orchestrator/stations/ (--all for every station)',
+      (y) =>
+        y
+          .positional('id', { describe: 'Station ID or short_code (omit with --all)', type: 'string' })
+          .option('all', { describe: 'Pull every station', type: 'boolean' }),
+      safe(pullStationsHandler),
+    )
+    .command(
+      'push [id]',
+      'Push local station files to the orchestrator (create/update; --all for every file)',
+      (y) =>
+        y
+          .positional('id', { describe: 'Filename, station ID, or short_code (omit with --all)', type: 'string' })
+          .option('all', { describe: 'Push every local station file', type: 'boolean' })
+          .option('force', { describe: 'On a 404 update, create remotely with the same id', type: 'boolean' }),
+      safe(pushStationsHandler),
     )
     .command(
       'archive <id>',
@@ -75,5 +109,5 @@ export function buildStationsSubcommands(yargs) {
           .option('cascade', { describe: 'Also delete linked work records (server support pending)', type: 'boolean' }),
       safe(deleteStationHandler),
     )
-    .demandCommand(1, 'Specify an action: list, show, run, archive, unarchive, delete');
+    .demandCommand(1, 'Specify an action: list, show, run, edit, pull, push, archive, unarchive, delete');
 }
