@@ -1,0 +1,41 @@
+{
+  "name": "@fob/orc",
+  "version": "0.1.0",
+  "description": "Orchestrator app client + fob-orc CLI (2-in-1). Import the client in workers, or use the CLI.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fob-orc": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node bin/cli.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "typecheck": "tsc -p jsconfig.json",
+    "typecheck:watch": "tsc -p jsconfig.json --watch"
+  },
+  "keywords": [
+    "orchestrator",
+    "api-client",
+    "cli",
+    "finops"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@inquirer/prompts": "^7.10.1",
+    "js-yaml": "^4.1.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/node": "^22.20.1",
+    "jest": "^29.7.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
