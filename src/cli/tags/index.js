@@ -2,7 +2,7 @@
  * Subtree builder for `fob-orc tags <action>`.
  */
 
-import { safe } from '../_helpers.js';
+import { safe, localOptions } from '../_helpers.js';
 
 import { listTagsHandler } from './list.js';
 import { createTagHandler } from './create.js';
@@ -15,15 +15,14 @@ export function buildTagsSubcommands(yargs) {
     .command(
       'list',
       'List all tags',
-      (y) => y.option('json', { describe: 'Output raw JSON', type: 'boolean' }),
+      (y) => localOptions(y).option('json', { describe: 'Output raw JSON', type: 'boolean' }),
       safe(listTagsHandler),
     )
     .command(
       'create <name>',
       'Create a tag',
       (y) =>
-        y
-          .positional('name', { describe: 'Tag name', type: 'string' })
+        localOptions(y.positional('name', { describe: 'Tag name', type: 'string' }))
           .option('color', { describe: 'Display color (hex)', type: 'string' })
           .option('description', { describe: 'Tag description', type: 'string' })
           .option('json', { describe: 'Output raw JSON', type: 'boolean' }),
@@ -33,8 +32,7 @@ export function buildTagsSubcommands(yargs) {
       'edit <id>',
       "Update a tag's fields",
       (y) =>
-        y
-          .positional('id', { describe: 'Tag ID', type: 'string' })
+        localOptions(y.positional('id', { describe: 'Tag ID', type: 'string' }))
           .option('name', { describe: 'New name', type: 'string' })
           .option('color', { describe: 'New color (hex)', type: 'string' })
           .option('description', { describe: 'New description', type: 'string' })

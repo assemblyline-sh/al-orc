@@ -2,7 +2,7 @@
  * Subtree builder for `fob-orc work-records <action>`.
  */
 
-import { safe } from '../_helpers.js';
+import { safe, localOptions } from '../_helpers.js';
 
 import { listWorkRecordsHandler } from './list.js';
 import { showWorkRecordHandler } from './show.js';
@@ -16,7 +16,7 @@ export function buildWorkRecordsSubcommands(yargs) {
       'list',
       'List work records',
       (y) =>
-        y
+        localOptions(y)
           .option('limit', { describe: 'Max records', type: 'number' })
           .option('status', { describe: 'Filter by status', type: 'string' })
           .option('station', { describe: 'Filter by station ID', type: 'string' })
@@ -28,8 +28,7 @@ export function buildWorkRecordsSubcommands(yargs) {
       'show <id>',
       'Show a work record (--report/--steps/--supporting-docs/--activity/--all for detail)',
       (y) =>
-        y
-          .positional('id', { describe: 'Work record ID', type: 'string' })
+        localOptions(y.positional('id', { describe: 'Work record ID', type: 'string' }))
           .option('report', { describe: 'Include the report', type: 'boolean' })
           .option('steps', { describe: 'Include step outputs', type: 'boolean' })
           .option('supporting-docs', { describe: 'Include supporting documents', type: 'boolean' })
@@ -42,8 +41,7 @@ export function buildWorkRecordsSubcommands(yargs) {
       'cancel <id>',
       'Cancel a running or pending work record',
       (y) =>
-        y
-          .positional('id', { describe: 'Work record ID', type: 'string' })
+        localOptions(y.positional('id', { describe: 'Work record ID', type: 'string' }))
           .option('json', { describe: 'Output raw JSON', type: 'boolean' }),
       safe(cancelWorkRecordHandler),
     )
@@ -51,8 +49,7 @@ export function buildWorkRecordsSubcommands(yargs) {
       'edit <id>',
       'Add or remove tags on a work record',
       (y) =>
-        y
-          .positional('id', { describe: 'Work record ID', type: 'string' })
+        localOptions(y.positional('id', { describe: 'Work record ID', type: 'string' }))
           .option('add-tag', { describe: 'Tag name to add (repeatable)', type: 'string', array: true })
           .option('remove-tag', { describe: 'Tag name to remove (repeatable)', type: 'string', array: true }),
       safe(editWorkRecordHandler),

@@ -17,7 +17,7 @@ import { buildStationsSubcommands } from './stations/index.js';
 import { buildWorkRecordsSubcommands } from './work-records/index.js';
 import { buildTagsSubcommands } from './tags/index.js';
 import { buildSupportingDocsSubcommands } from './supporting-docs/index.js';
-import { safe } from './_helpers.js';
+import { safe, localOptions } from './_helpers.js';
 import { statusHandler } from './status.js';
 
 export function run(argv) {
@@ -40,7 +40,7 @@ export function run(argv) {
     .command(
       'status',
       'Check connectivity to the orchestrator (active profile)',
-      (y) => y.option('json', { describe: 'Output raw JSON', type: 'boolean' }),
+      (y) => localOptions(y).option('json', { describe: 'Output raw JSON', type: 'boolean' }),
       safe(statusHandler),
     )
     .demandCommand(1, 'Specify a resource. Try `fob-orc --help`.')
@@ -49,5 +49,9 @@ export function run(argv) {
     .alias('h', 'help')
     .version()
     .alias('v', 'version')
+    // Global options (inherited by every command) render under their own
+    // heading; each command's own options stay under "Options:", shown first
+    // via localOptions() in the command builders.
+    .group(['profile', 'help', 'version'], 'Global Options:')
     .parse();
 }
