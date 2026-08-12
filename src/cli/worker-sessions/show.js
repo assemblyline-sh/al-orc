@@ -1,5 +1,5 @@
 import { clientFor } from '../_helpers.js';
-import { formatTable, formatDate, formatField, formatSection } from '../utils/format.js';
+import { formatTable, formatDate, formatField, formatSection, localTzLabel, truncate } from '../utils/format.js';
 
 /** `fob-orc worker-sessions show <id>` — one worker process, and what it did. */
 export async function showWorkerSessionHandler(argv) {
@@ -65,14 +65,14 @@ export async function showWorkerSessionHandler(argv) {
       console.log('No tasks.');
     } else {
       console.log(formatTable(
-        ['WORK RECORD', 'STEP', 'STATUS', 'TRIES', 'CLAIMED', 'ERROR'],
+        ['WORK RECORD', 'STEP', 'STATUS', 'TRIES', `CLAIMED (${localTzLabel()})`, 'ERROR'],
         recent.map((t) => [
           t.work_record,
           t.step_slug,
           t.status,
           String(t.retry_count ?? 0),
           formatDate(t.claimed_at),
-          t.error ? String(t.error).slice(0, 60) : '—',
+          truncate(t.error, 60),
         ]),
       ));
     }

@@ -1,5 +1,5 @@
 import { clientFor } from '../_helpers.js';
-import { formatHeader, formatField, formatTable, formatSection, formatDate } from '../utils/format.js';
+import { formatHeader, formatField, formatTable, formatSection, formatDate, formatDuration, localTzLabel, truncate } from '../utils/format.js';
 
 /** `fob-orc stations show <id>` — one station's definition, optionally with recent work records. */
 export async function showStationHandler(argv) {
@@ -41,8 +41,19 @@ export async function showStationHandler(argv) {
     const records = await orc.workRecords.list({ station: station.id, limit: 10 }).then((r) => r.data || []);
     console.log(formatSection(`Recent Work Records (${records.length})`));
     if (records.length > 0) {
-      const rows = records.map((r) => [r.id, r.status || '—', formatDate(r.created_at)]);
-      console.log(formatTable(['ID', 'STATUS', 'CREATED'], rows));
+      // No STATION column — this section is already scoped to one station.
+      const rows = records.map((r) => [
+        r.id,
+        r.status || '—',
+        formatDate(r.created_at),
+        formatDuration(r.started_at, r.completed_at),
+        r.performed_by || '—',
+        truncate(r.error, 40),
+      ]);
+      console.log(formatTable(
+        ['ID', 'STATUS', `CREATED (${localTzLabel()})`, 'TOOK', 'BY', 'ERROR'],
+        rows,
+      ));
       console.log(`\nUse \`fob-orc work-records list --station ${station.id}\` for the full list.`);
     } else {
       console.log('No work records found.');

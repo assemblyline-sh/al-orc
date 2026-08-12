@@ -1,12 +1,12 @@
 import { clientFor } from '../_helpers.js';
-import { formatTable, formatDate } from '../utils/format.js';
+import { formatTable, formatDate, formatDuration, localTzLabel, formatPaginationHint, truncate } from '../utils/format.js';
 
 /** `fob-orc work-records list` — work records from the orchestrator, filterable. */
 export async function listWorkRecordsHandler(argv) {
   const { limit, status, station, tag, json } = argv;
 
   const orc = clientFor();
-  const { data } = await orc.workRecords.list({ limit, status, station, tag });
+  const { data, page_context } = await orc.workRecords.list({ limit, status, station, tag });
   const records = data || [];
 
   if (json) {
@@ -19,8 +19,27 @@ export async function listWorkRecordsHandler(argv) {
     return;
   }
 
-  const rows = records.map((r) => [r.id, r.status || '—', formatDate(r.created_at)]);
-  console.log(formatTable(['ID', 'STATUS', 'CREATED'], rows));
+  // STATION shows the station id: the API returns `process` as an id, and
+  // resolving each to its short_code would cost a request per row. Filtering by
+  // station already tells you which one; unfiltered, the id is what
+  // `fob orc stations show <id>` takes.
+  const rows = records.map((r) => [
+    r.id,
+    r.process || '—',
+    r.status || '—',
+    formatDate(r.created_at),
+    formatDuration(r.started_at, r.completed_at),
+    r.performed_by || '—',
+    truncate(r.error, 40),
+  ]);
+
+  console.log(formatTable(
+    ['ID', 'STATION', 'STATUS', `CREATED (${localTzLabel()})`, 'TOOK', 'BY', 'ERROR'],
+    rows,
+  ));
   console.log('');
   console.log(`Total: ${records.length} records`);
+
+  const hint = formatPaginationHint(page_context);
+  if (hint) console.log(hint);
 }

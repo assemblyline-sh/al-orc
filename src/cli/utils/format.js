@@ -111,14 +111,70 @@ export function formatDuration(start, end) {
   return remHr > 0 ? `${days}d ${remHr}h` : `${days}d`;
 }
 
+/** The zone timestamps render in. Resolved once, so a long listing cannot straddle a DST change mid-table. */
+const LOCAL_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 /**
- * Format an ISO date string to human-readable.
- * "2026-03-15 10:23:01"
+ * Short zone label, e.g. "PDT" or "Asia/Calcutta". Computed once — it labels a
+ * header, not a value.
+ *
+ * `timeZoneName: 'short'` only yields a real abbreviation for zones ICU has one
+ * for; elsewhere it returns "GMT+5:30", which is correct but noisy in a column
+ * header and tells you less than the zone's own name. So: take the abbreviation
+ * when it is one, otherwise use the IANA name.
+ */
+const LOCAL_TZ_LABEL = (() => {
+  const parts = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' }).formatToParts(new Date());
+  const short = parts.find((p) => p.type === 'timeZoneName')?.value;
+  if (short && !/^(GMT|UTC)[+-]/.test(short)) return short;
+  return LOCAL_TZ || short || 'local';
+})();
+
+/**
+ * Short name of the local zone, e.g. "PDT" or "Asia/Calcutta".
+ *
+ * Use it to name the zone ONCE per table or detail block — in the column header
+ * (`CREATED (${localTzLabel()})`) or a section heading — never per row.
+ */
+export function localTzLabel() {
+  return LOCAL_TZ_LABEL;
+}
+
+/**
+ * Format an ISO timestamp in the operator's local timezone: "2026-03-15 15:53:01".
+ *
+ * **Local, not UTC.** The orchestrator stores and returns UTC, and this used to
+ * print `toISOString()` verbatim — so an operator in IST read every timestamp
+ * 5.5 hours early with nothing on screen saying so. That quietly breaks the
+ * main thing these timestamps are for: correlating against `pm2 logs`, file
+ * mtimes and `fob worker` output, all of which are local.
+ *
+ * Pair with `localTzLabel()` in the surrounding header so the zone is stated
+ * once. sv-SE is used because its locale format is already `YYYY-MM-DD HH:MM:SS`.
  */
 export function formatDate(iso) {
   if (!iso) return '—';
   const d = new Date(iso);
-  return d.toISOString().replace('T', ' ').slice(0, 19);
+  if (Number.isNaN(d.getTime())) return '—';
+  return d.toLocaleString('sv-SE', { timeZone: LOCAL_TZ }).replace(',', '');
+}
+
+/**
+ * Collapse whitespace and cap a free-text value for table display.
+ *
+ * For fields with no length bound — error messages, titles, descriptions. An
+ * error containing a newline would otherwise break the table's row alignment
+ * entirely, so newlines collapse to spaces before truncating. Returns the
+ * standard '—' placeholder for empty input, so callers need no `|| '—'`.
+ *
+ * @param {unknown} value
+ * @param {number} max  Total width including the ellipsis.
+ */
+export function truncate(value, max) {
+  if (value === null || value === undefined || value === '') return '—';
+  const flat = String(value).replace(/\s+/g, ' ').trim();
+  if (!flat) return '—';
+  return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat;
 }
 
 /**

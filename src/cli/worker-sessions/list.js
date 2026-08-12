@@ -1,5 +1,5 @@
 import { clientFor } from '../_helpers.js';
-import { formatTable, formatDate } from '../utils/format.js';
+import { formatTable, formatDate, localTzLabel } from '../utils/format.js';
 
 /**
  * Group active sessions by location and flag the ones that disagree.
@@ -73,7 +73,7 @@ export async function listWorkerSessionsHandler(argv) {
   ]);
 
   console.log(formatTable(
-    ['SESSION', 'WORKER_NAME', 'HOST', 'PID', 'VER', 'STATUS', 'TASKS', 'FAIL', 'LAST SEEN'],
+    ['SESSION', 'WORKER_NAME', 'HOST', 'PID', 'VER', 'STATUS', 'TASKS', 'FAIL', `LAST SEEN (${localTzLabel()})`],
     rows,
   ));
   console.log('');

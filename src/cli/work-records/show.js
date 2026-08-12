@@ -1,5 +1,5 @@
 import { clientFor } from '../_helpers.js';
-import { formatHeader, formatField, formatTable, formatSection, formatDate, formatDuration } from '../utils/format.js';
+import { formatHeader, formatField, formatTable, formatSection, formatDate, formatDuration, localTzLabel } from '../utils/format.js';
 
 /** `fob-orc work-records show <id>` — one work record, with optional detail sections. */
 export async function showWorkRecordHandler(argv) {
@@ -65,7 +65,7 @@ export async function showWorkRecordHandler(argv) {
     console.log(formatSection(`Supporting Documents (${docs.length})`));
     if (docs.length) {
       const rows = docs.map((d) => [d.id, d.type || '—', d.title || '—', formatDate(d.created_at)]);
-      console.log(formatTable(['ID', 'TYPE', 'TITLE', 'CREATED'], rows));
+      console.log(formatTable(['ID', 'TYPE', 'TITLE', `CREATED (${localTzLabel()})`], rows));
       console.log('\nUse `fob-orc supporting-docs show <id>` to view content.');
     } else {
       console.log('No supporting documents.');
@@ -86,7 +86,7 @@ export async function showWorkRecordHandler(argv) {
         e.properties?.worker_name || '—',
         e.properties?.worker_session_id || '—',
       ]);
-      console.log(formatTable(['TIME', 'EVENT', 'WORKER', 'SESSION'], rows));
+      console.log(formatTable([`TIME (${localTzLabel()})`, 'EVENT', 'WORKER', 'SESSION'], rows));
     } else if (events) {
       console.log('No activity events.');
     } else {

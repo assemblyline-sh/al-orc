@@ -29,7 +29,7 @@ export async function listStationsHandler(argv) {
   ]);
   const headers = ['CODE', 'ID', 'NAME', 'STEPS', ...(includeArchived ? ['ARCHIVED'] : [])];
 
-  console.log(formatTable(headers, rows, { align: [] }));
+  console.log(formatTable(headers, rows));
   console.log('');
   console.log(`Total: ${stations.length} stations${includeArchived ? ' (including archived)' : ''}`);
 }
