@@ -22,6 +22,7 @@ import { buildStations } from './resources/stations.js';
 import { buildWorkRecords } from './resources/work-records.js';
 import { buildTags } from './resources/tags.js';
 import { buildSupportingDocs } from './resources/supporting-docs.js';
+import { buildWorkerSessions } from './resources/worker-sessions.js';
 
 /**
  * @typedef {import('./types/general/index.js').Credentials} Credentials
@@ -29,6 +30,7 @@ import { buildSupportingDocs } from './resources/supporting-docs.js';
  * @typedef {import('./resources/work-records.js').WorkRecordsApi} WorkRecordsApi
  * @typedef {import('./resources/tags.js').TagsApi} TagsApi
  * @typedef {import('./resources/supporting-docs.js').SupportingDocsApi} SupportingDocsApi
+ * @typedef {import('./resources/worker-sessions.js').WorkerSessionsApi} WorkerSessionsApi
  */
 
 /**
@@ -39,6 +41,7 @@ import { buildSupportingDocs } from './resources/supporting-docs.js';
  * @property {WorkRecordsApi} workRecords
  * @property {TagsApi} tags
  * @property {SupportingDocsApi} supportingDocs
+ * @property {WorkerSessionsApi} workerSessions
  * @property {() => Promise<{ connected: boolean, status?: number, error?: string }>} checkConnection
  */
 
@@ -56,6 +59,7 @@ export function fobOrc(credentials) {
     workRecords: buildWorkRecords(ctx),
     tags: buildTags(ctx),
     supportingDocs: buildSupportingDocs(ctx),
+    workerSessions: buildWorkerSessions(ctx),
     /** Probe the orchestrator's worker-poll endpoint; never throws. */
     checkConnection: async () => {
       try {

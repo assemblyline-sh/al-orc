@@ -76,8 +76,17 @@ export async function showWorkRecordHandler(argv) {
     const events = await orc.workRecords.activity(id).catch(() => null);
     console.log(formatSection(`Activity (${events?.length ?? 0})`));
     if (events?.length) {
-      const rows = events.map((e) => [formatDate(e.created_at), e.event || e.type || '—', e.action_type || '—']);
-      console.log(formatTable(['TIME', 'EVENT', 'ACTION'], rows));
+      // Worker attribution rides in `properties` on the claim/complete/fail
+      // events. It was being fetched and dropped, which is why diagnosing a
+      // bad worker meant hand-querying the API. `fob orc worker-sessions show
+      // <session>` takes it from here.
+      const rows = events.map((e) => [
+        formatDate(e.created_at),
+        e.event || e.type || '—',
+        e.properties?.worker_name || '—',
+        e.properties?.worker_session_id || '—',
+      ]);
+      console.log(formatTable(['TIME', 'EVENT', 'WORKER', 'SESSION'], rows));
     } else if (events) {
       console.log('No activity events.');
     } else {

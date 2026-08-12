@@ -17,6 +17,7 @@ import { buildStationsSubcommands } from './stations/index.js';
 import { buildWorkRecordsSubcommands } from './work-records/index.js';
 import { buildTagsSubcommands } from './tags/index.js';
 import { buildSupportingDocsSubcommands } from './supporting-docs/index.js';
+import { buildWorkerSessionsSubcommands } from './worker-sessions/index.js';
 import { safe, localOptions } from './_helpers.js';
 import { statusHandler } from './status.js';
 
@@ -37,6 +38,7 @@ export function run(argv) {
     .command('work-records <action>', 'Query and manage work records', buildWorkRecordsSubcommands)
     .command('tags <action>', 'Manage tags', buildTagsSubcommands)
     .command('supporting-docs <action>', 'View and download supporting documents', buildSupportingDocsSubcommands)
+    .command('worker-sessions <action>', 'Inspect worker processes and what they ran', buildWorkerSessionsSubcommands)
     .command(
       'status',
       'Check connectivity to the orchestrator (active profile)',
