@@ -8,7 +8,8 @@ export async function archiveStationHandler(argv) {
     console.log(JSON.stringify(station, null, 2));
     return;
   }
-  console.log(`Archived station ${id}.`);
+  // The API response carries short_code; `id` is only what the user typed.
+  console.log(`Archived station ${station?.short_code || id}.`);
 }
 
 /** `fob-orc stations unarchive <id>` — undo archive. */
@@ -19,5 +20,5 @@ export async function unarchiveStationHandler(argv) {
     console.log(JSON.stringify(station, null, 2));
     return;
   }
-  console.log(`Unarchived station ${id}.`);
+  console.log(`Unarchived station ${station?.short_code || id}.`);
 }

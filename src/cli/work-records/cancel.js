@@ -1,10 +1,12 @@
 import { clientFor } from '../_helpers.js';
+import { buildStationLabelMap, stationLabel } from '../utils/station-labels.js';
 
 /** `fob-orc work-records cancel <id>` — cancel a running or pending work record. */
 export async function cancelWorkRecordHandler(argv) {
   const { id, json } = argv;
 
-  const record = await clientFor().workRecords.cancel(id);
+  const orc = clientFor();
+  const record = await orc.workRecords.cancel(id);
 
   if (json) {
     console.log(JSON.stringify(record, null, 2));
@@ -13,5 +15,10 @@ export async function cancelWorkRecordHandler(argv) {
 
   console.log(`Cancelled work record ${record?.id ?? id}`);
   if (record?.status) console.log(`Status:   ${record.status}`);
-  if (record?.process) console.log(`Station:  ${record.process}`);
+  if (record?.process) {
+    // `process` is the station id; show its short_code when it resolves —
+    // matches `work-records list` / `show` in this CLI.
+    const labels = await buildStationLabelMap(orc);
+    console.log(`Station:  ${stationLabel(record.process, labels)}`);
+  }
 }
