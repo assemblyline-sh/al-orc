@@ -1,5 +1,6 @@
 import { clientFor } from '../_helpers.js';
 import { formatHeader, formatField, formatTable, formatSection, formatDate, formatDuration, localTzLabel } from '../utils/format.js';
+import { buildStationLabelMap, stationLabel } from '../utils/station-labels.js';
 
 /** `fob-orc work-records show <id>` — one work record, with optional detail sections. */
 export async function showWorkRecordHandler(argv) {
@@ -30,7 +31,9 @@ export async function showWorkRecordHandler(argv) {
   console.log(formatHeader('Work Record', record.id, record.status));
   console.log('');
   const lw = 14;
-  console.log(formatField('Station', record.process || '—', lw));
+  // `process` is the station id; show its short_code when it resolves.
+  const labels = await buildStationLabelMap(orc);
+  console.log(formatField('Station', stationLabel(record.process, labels), lw));
   console.log(formatField('Status', record.status, lw));
   console.log(formatField('Duration', formatDuration(record.started_at, record.completed_at), lw));
   console.log(formatField('Created', formatDate(record.created_at), lw));

@@ -1,5 +1,6 @@
 import { clientFor } from '../_helpers.js';
 import { formatTable, formatDate, formatDuration, localTzLabel, formatPaginationHint, truncate } from '../utils/format.js';
+import { buildStationLabelMap, stationLabel } from '../utils/station-labels.js';
 
 /** `fob-orc work-records list` — work records from the orchestrator, filterable. */
 export async function listWorkRecordsHandler(argv) {
@@ -19,13 +20,15 @@ export async function listWorkRecordsHandler(argv) {
     return;
   }
 
-  // STATION shows the station id: the API returns `process` as an id, and
-  // resolving each to its short_code would cost a request per row. Filtering by
-  // station already tells you which one; unfiltered, the id is what
-  // `fob orc stations show <id>` takes.
+  // STATION shows the short_code (`EM3`), not the raw id the API returns as
+  // `process`. One stations.getAll() builds the whole map, so the label costs a
+  // single request for the table rather than one per row. Unresolved ids print
+  // as-is — still what `fob orc stations show <id>` takes.
+  const labels = await buildStationLabelMap(orc);
+
   const rows = records.map((r) => [
     r.id,
-    r.process || '—',
+    stationLabel(r.process, labels),
     r.status || '—',
     formatDate(r.created_at),
     formatDuration(r.started_at, r.completed_at),
