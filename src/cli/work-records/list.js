@@ -4,10 +4,10 @@ import { buildStationLabelMap, stationLabel } from '../utils/station-labels.js';
 
 /** `fob-orc work-records list` — work records from the orchestrator, filterable. */
 export async function listWorkRecordsHandler(argv) {
-  const { limit, status, station, tag, json } = argv;
+  const { limit, status, station, line, tag, json } = argv;
 
   const orc = clientFor();
-  const { data, page_context } = await orc.workRecords.list({ limit, status, station, tag });
+  const { data, page_context } = await orc.workRecords.list({ limit, status, station, line, tag });
   const records = data || [];
 
   if (json) {

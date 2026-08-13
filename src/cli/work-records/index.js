@@ -19,7 +19,8 @@ export function buildWorkRecordsSubcommands(yargs) {
         localOptions(y)
           .option('limit', { describe: 'Max records', type: 'number' })
           .option('status', { describe: 'Filter by status', type: 'string' })
-          .option('station', { describe: 'Filter by station ID', type: 'string' })
+          .option('station', { describe: 'Filter by station ID or short_code (e.g. EM0)', type: 'string' })
+          .option('line', { describe: 'Filter by line — every station on it (e.g. VM)', type: 'string' })
           .option('tag', { describe: 'Filter by tag name', type: 'string' })
           .option('json', { describe: 'Output raw JSON', type: 'boolean' }),
       safe(listWorkRecordsHandler),
