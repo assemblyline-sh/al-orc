@@ -1,10 +1,10 @@
-# @fob/orc
+# @finopsbricks/fob-orc
 
 Orchestrator app client + `fob-orc` CLI — a **2-in-1**: import the client in workers, or use the CLI.
 Part of the `fob-<tool>` wrapper family (see `fob-stm`, `fob-email`).
 
 ```js
-import { fobOrc } from '@fob/orc';
+import { fobOrc } from '@finopsbricks/fob-orc';
 
 const orc = fobOrc({ api_key, api_secret });   // api_url optional (defaults to the hosted origin)
 const { data: stations } = await orc.stations.list({ tag: 'daily' });

@@ -1,10 +1,10 @@
 // @ts-check
 /**
- * @fob/orc — the importable orchestrator client.
+ * @finopsbricks/fob-orc — the importable orchestrator client.
  *
  * Construct a client with credentials bound once, then call resource namespaces:
  *
- *   import { fobOrc } from '@fob/orc';
+ *   import { fobOrc } from '@finopsbricks/fob-orc';
  *   const orc = fobOrc({ api_key, api_secret });   // api_url optional (defaults to the hosted origin)
  *   const { data } = await orc.stations.list();
  *   const wr = await orc.stations.run(id, { overrides: { dry_run: true } });
