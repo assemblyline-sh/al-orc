@@ -23,7 +23,18 @@
     "cli",
     "finops"
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@inquirer/prompts": "^7.10.1",
     "js-yaml": "^4.1.0",
