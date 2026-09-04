@@ -5,7 +5,7 @@
  * @property {string} id
  * @property {string} name
  * @property {string} [short_code]
- * @property {string} [line]
+ * @property {string} line              Line code. The line owns the worker location; a station has none of its own.
  * @property {string} [description]
  * @property {StationStep[]} [steps]
  * @property {string[]} [dependencies]  Station ids or short_codes this one depends on.

@@ -8,6 +8,8 @@ import {
   findStationFile,
   getStationsDir,
 } from '../utils/station-files.js';
+import { pushAllLines } from '../lines/push.js';
+import { listAllLineFiles } from '../utils/line-files.js';
 
 /**
  * Build a short_code → ID map from remote stations (once per push session),
@@ -86,6 +88,16 @@ async function pushByFilename(orc, cache, filename, { force = false } = {}) {
   if (!station) {
     console.error(`Station file not found: ${filename}`);
     process.exit(1);
+  }
+
+  // `location` moved to the line (orchestrator D3); the API rejects it on a
+  // station. Drop it here so an un-repulled file still pushes, and say so.
+  if (station.location !== undefined) {
+    console.log(`  Ignoring "location" in ${filename} — location now lives on line "${station.line}" (.orchestrator/lines/)`);
+    delete station.location;
+  }
+  if (!station.line) {
+    throw new Error(`${filename}: station has no "line". Every station is on a line; add "line": "<CODE>" and push the line file first.`);
   }
 
   if (!station.id) {
@@ -167,6 +179,13 @@ export async function pushStationsHandler(argv) {
       await pushByFilename(orc, cache, filepath, { force });
     }
     return;
+  }
+
+  // Lines first: a new station's `line` code must already exist server-side.
+  if (listAllLineFiles().length > 0) {
+    const { created, updated } = await pushAllLines(orc);
+    console.log(`Lines: ${updated} updated, ${created} created`);
+    console.log('');
   }
 
   const allPaths = listAllStationFiles();

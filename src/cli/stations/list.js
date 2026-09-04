@@ -6,9 +6,8 @@ export async function listStationsHandler(argv) {
   const { tag, line, json, includeArchived } = argv || {};
 
   const orc = clientFor();
-  const { data } = await orc.stations.list({ tag, include_archived: includeArchived });
-  let stations = data || [];
-  if (line) stations = stations.filter((s) => s.line === line);
+  const { data } = await orc.stations.list({ tag, line, include_archived: includeArchived });
+  const stations = data || [];
 
   if (json) {
     console.log(JSON.stringify(stations, null, 2));

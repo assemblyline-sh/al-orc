@@ -13,6 +13,7 @@ import yargs from 'yargs';
 
 import { setOrgOverride } from './config-store.js';
 import { buildConfigSubcommands } from './config/index.js';
+import { buildLinesSubcommands } from './lines/index.js';
 import { buildStationsSubcommands } from './stations/index.js';
 import { buildWorkRecordsSubcommands } from './work-records/index.js';
 import { buildTagsSubcommands } from './tags/index.js';
@@ -34,6 +35,7 @@ export function run(argv) {
       if (argv.profile) setOrgOverride(argv.profile);
     })
     .command('config <resource>', 'Manage credential profiles (alias: orgs)', buildConfigSubcommands)
+    .command('lines <action>', 'Manage lines (a line owns the worker location its stations run at)', buildLinesSubcommands)
     .command('stations <action>', 'Query and run stations (orchestrator definitions)', buildStationsSubcommands)
     .command('work-records <action>', 'Query and manage work records', buildWorkRecordsSubcommands)
     .command('tags <action>', 'Manage tags', buildTagsSubcommands)

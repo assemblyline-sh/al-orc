@@ -1,6 +1,6 @@
 {
   "name": "@finopsbricks/fob-orc",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Orchestrator app client + fob-orc CLI (2-in-1). Import the client in workers, or use the CLI.",
   "type": "module",
   "main": "src/index.js",

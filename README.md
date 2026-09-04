@@ -20,6 +20,7 @@ Credentials are **explicit** — the client never reads `process.env` (see engin
 
 | Namespace | Methods |
 |---|---|
+| `orc.lines` | `list · getAll · get · create · update · delete` — a line owns the worker location its stations run at |
 | `orc.stations` | `list · getAll · get · create · update · delete · archive · unarchive · run · getTags · setTags` |
 | `orc.workRecords` | `list · getAll · get · activity · cancel · getTags · setTags` |
 | `orc.tags` | `list · create · update · delete · resolveNames · ensure` |

@@ -7,6 +7,7 @@
  *   import { fobOrc } from '@finopsbricks/fob-orc';
  *   const orc = fobOrc({ api_key, api_secret });   // api_url optional (defaults to the hosted origin)
  *   const { data } = await orc.stations.list();
+ *   const lines = await orc.lines.getAll();
  *   const wr = await orc.stations.run(id, { overrides: { dry_run: true } });
  *
  * The `fob-orc` CLI builds the same client and calls these same namespaces — so
@@ -18,6 +19,7 @@
  */
 
 import { createTransport, apiGet } from './http.js';
+import { buildLines } from './resources/lines.js';
 import { buildStations } from './resources/stations.js';
 import { buildWorkRecords } from './resources/work-records.js';
 import { buildTags } from './resources/tags.js';
@@ -26,6 +28,7 @@ import { buildWorkerSessions } from './resources/worker-sessions.js';
 
 /**
  * @typedef {import('./types/general/index.js').Credentials} Credentials
+ * @typedef {import('./resources/lines.js').LinesApi} LinesApi
  * @typedef {import('./resources/stations.js').StationsApi} StationsApi
  * @typedef {import('./resources/work-records.js').WorkRecordsApi} WorkRecordsApi
  * @typedef {import('./resources/tags.js').TagsApi} TagsApi
@@ -37,6 +40,7 @@ import { buildWorkerSessions } from './resources/worker-sessions.js';
  * The orchestrator client. Explicit (not inferred) so callers — CLI handlers and
  * workers alike — get a checked, autocompleted surface.
  * @typedef {Object} OrcClient
+ * @property {LinesApi} lines
  * @property {StationsApi} stations
  * @property {WorkRecordsApi} workRecords
  * @property {TagsApi} tags
@@ -55,6 +59,7 @@ import { buildWorkerSessions } from './resources/worker-sessions.js';
 export function fobOrc(credentials) {
   const ctx = createTransport(credentials);
   return {
+    lines: buildLines(ctx),
     stations: buildStations(ctx),
     workRecords: buildWorkRecords(ctx),
     tags: buildTags(ctx),

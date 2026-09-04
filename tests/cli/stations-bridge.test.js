@@ -8,9 +8,13 @@ import { join } from 'node:path';
 // tag object→name→id handling, and the id/created_at/org/tags payload stripping.
 
 const REMOTE = {
-  p1: { id: 'p1', short_code: 'VM3', name: 'Vendor Match', dependencies: ['p2'], tags: [{ id: 't1', name: 'daily' }] },
-  p2: { id: 'p2', short_code: 'AP1', name: 'AP Intake', dependencies: [] },
+  p1: { id: 'p1', short_code: 'VM3', line: 'VM', name: 'Vendor Match', dependencies: ['p2'], tags: [{ id: 't1', name: 'daily' }] },
+  p2: { id: 'p2', short_code: 'AP1', line: 'AP', name: 'AP Intake', dependencies: [] },
 };
+const LINES = [
+  { id: 'l1', code: 'VM', name: 'VM', location: 'alex-laptop1', stations: [] },
+  { id: 'l2', code: 'AP', name: 'AP', location: 'nowapps3', stations: [] },
+];
 
 function installFetch(calls) {
   global.fetch = jest.fn(async (url, init = {}) => {
@@ -18,7 +22,9 @@ function installFetch(calls) {
     const p = url.pathname;
     calls.push({ method, path: p, body: init.body ? JSON.parse(init.body) : undefined });
     let data;
-    if (method === 'GET' && p === '/api/v1/processes') data = Object.values(REMOTE);
+    if (method === 'GET' && p === '/api/v1/lines') data = LINES;
+    else if (method === 'PUT' && p.startsWith('/api/v1/lines/')) data = LINES.find((l) => p.endsWith(l.id));
+    else if (method === 'GET' && p === '/api/v1/processes') data = Object.values(REMOTE);
     else if (method === 'GET' && p.startsWith('/api/v1/processes/')) data = REMOTE[p.split('/').pop()];
     else if (method === 'GET' && p === '/api/v1/tags') data = [{ id: 't1', name: 'daily' }];
     else if (method === 'PUT' && p.endsWith('/tags')) data = [];
@@ -53,6 +59,7 @@ describe('stations pull/push bridge', () => {
 
     const files = readdirSync('.orchestrator/stations').sort();
     expect(files).toEqual(['AP1__ap_intake.json', 'VM3__vendor_match.json']);
+    expect(readdirSync('.orchestrator/lines').sort()).toEqual(['AP.json', 'VM.json']); // lines come along
 
     const vm3 = JSON.parse(readFileSync('.orchestrator/stations/VM3__vendor_match.json', 'utf8'));
     expect(vm3.dependencies).toEqual(['AP1']); // p2 → AP1
@@ -68,6 +75,7 @@ describe('stations pull/push bridge', () => {
     expect(put1.body.dependencies).toEqual(['p2']); // AP1 → p2
     expect(put1.body).not.toHaveProperty('id'); // stripped
     expect(put1.body).not.toHaveProperty('tags'); // stripped
+    expect(put1.body.line).toBe('VM'); // line travels as its code; the server resolves it
 
     const tagsPut = calls.find((c) => c.path === '/api/v1/processes/p1/tags');
     expect(tagsPut.body).toEqual({ tags: ['t1'] }); // name 'daily' → id 't1'

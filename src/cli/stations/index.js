@@ -26,7 +26,7 @@ export function buildStationsSubcommands(yargs) {
       (y) =>
         paginationOptions(y)
           .option('tag', { describe: 'Filter by tag name', type: 'string' })
-          .option('line', { describe: 'Filter by line (client-side)', type: 'string' })
+          .option('line', { describe: 'Filter by line code or ID', type: 'string' })
           .option('include-archived', { describe: 'Include archived stations', type: 'boolean' }),
       safe(listStationsHandler),
     )

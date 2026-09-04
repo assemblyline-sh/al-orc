@@ -21,8 +21,8 @@
  * The station client surface. Explicit (not inferred) so callers get real
  * checking; `buildStations`'s `@returns` binds it, so `tsc` verifies the impl.
  * @typedef {Object} StationsApi
- * @property {(params?: { tag?: string, include_archived?: boolean }) => Promise<{ data: Station[], page_context: object|null }>} list
- * @property {(params?: { tag?: string, include_archived?: boolean }) => Promise<Station[]>} getAll
+ * @property {(params?: { tag?: string, line?: string, include_archived?: boolean }) => Promise<{ data: Station[], page_context: object|null }>} list
+ * @property {(params?: { tag?: string, line?: string, include_archived?: boolean }) => Promise<Station[]>} getAll
  * @property {(id: string) => Promise<Station|null>} get
  * @property {(data: object) => Promise<Station|null>} create
  * @property {(id: string, data: object) => Promise<Station|null>} update

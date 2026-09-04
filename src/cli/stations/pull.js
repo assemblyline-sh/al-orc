@@ -1,5 +1,7 @@
 import { clientFor } from '../_helpers.js';
 import { saveStation, getStationsDir } from '../utils/station-files.js';
+import { pullAllLines } from '../lines/pull.js';
+import { getLinesDir } from '../utils/line-files.js';
 
 /**
  * Convert dependency IDs to short_codes using an id→short_code map.
@@ -30,9 +32,9 @@ export async function pullStationsHandler(argv) {
   }
 
   const orc = clientFor();
-  console.log(`Saving to: ${getStationsDir()}/`);
 
   if (id) {
+    console.log(`Saving to: ${getStationsDir()}/`);
     // Single station — also fetch the list for dependency resolution.
     const [station, allStations] = await Promise.all([orc.stations.get(id), orc.stations.getAll()]);
     if (!station) {
@@ -45,7 +47,14 @@ export async function pullStationsHandler(argv) {
     return;
   }
 
-  // All stations.
+  // All stations — lines first, so every station's `line` code resolves locally
+  // (the worker refuses to boot on a station whose line file is missing).
+  console.log(`Saving to: ${getLinesDir()}/`);
+  const line_count = await pullAllLines(orc);
+  console.log(`Total: ${line_count} lines pulled`);
+  console.log('');
+  console.log(`Saving to: ${getStationsDir()}/`);
+
   const stations = await orc.stations.getAll();
   if (stations.length === 0) {
     console.log('No stations found');
