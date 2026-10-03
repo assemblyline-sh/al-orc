@@ -5,7 +5,7 @@
  * PURE: credentials come from the `credentials` argument only — this module
  * never reads `process.env` or the CLI config file. Callers resolve creds their
  * own way (the CLI from its config profiles, workers from their own env) and
- * inject them. See engineering-standards `no-ambient-configuration`.
+ * inject them.
  *
  * Base URL is origin-only (e.g. https://orchestrator.finopsbricks.com/); the
  * /api/v1 prefix is carried in the paths passed by the resource layer.
@@ -46,7 +46,7 @@ export const DEFAULT_API_URL = 'https://orchestrator.finopsbricks.com';
 
 /**
  * Resolve credentials from the explicit argument only — this module never reads
- * `process.env` (see engineering-standards `no-ambient-configuration`). Callers
+ * `process.env`. Callers
  * pass `{ api_key, api_secret }` (required) and optionally `api_url` (defaults to
  * the hosted origin) and `location` (sent as `X-Location`).
  * @param {Credentials} credentials

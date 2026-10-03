@@ -31,10 +31,10 @@ describe('workerSessions resource namespace (via fobOrc)', () => {
 
   it('list() passes filters through as query params', async () => {
     const calls = mockFetch([{ data: [] }]);
-    await fobOrc(CREDS).workerSessions.list({ status: 'active', location: 'alex-laptop1' });
+    await fobOrc(CREDS).workerSessions.list({ status: 'active', location: 'dev-laptop1' });
 
     expect(calls[0].url).toContain('status=active');
-    expect(calls[0].url).toContain('location=alex-laptop1');
+    expect(calls[0].url).toContain('location=dev-laptop1');
   });
 
   it('get() unwraps the single record', async () => {
@@ -59,27 +59,27 @@ describe('findLocationCollisions', () => {
 
   it('is silent for one worker per location', () => {
     expect(findLocationCollisions([
-      active('a', 'alex-laptop1'),
-      active('b', 'nowapps3'),
+      active('a', 'dev-laptop1'),
+      active('b', 'acme'),
     ])).toEqual([]);
   });
 
   it('flags the 2026-08-11 incident: two versions on one location', () => {
     const found = findLocationCollisions([
-      active('OJz4vMuKJ096', 'alex-laptop1', { worker_version: '0.32.0', cwd: '/home/alex/w' }),
-      active('8ctRxo4aXw4J', 'alex-laptop1', { worker_version: '0.25.0', cwd: '/Users/alex/w' }),
+      active('OJz4vMuKJ096', 'dev-laptop1', { worker_version: '0.32.0', cwd: '/home/dev/w' }),
+      active('8ctRxo4aXw4J', 'dev-laptop1', { worker_version: '0.25.0', cwd: '/home/dev/w' }),
     ]);
 
     expect(found).toHaveLength(1);
-    expect(found[0].location).toBe('alex-laptop1');
+    expect(found[0].location).toBe('dev-laptop1');
     expect(found[0].count).toBe(2);
     expect(found[0].versions.sort()).toEqual(['0.25.0', '0.32.0']);
   });
 
   it('ignores expired sessions — only concurrent workers collide', () => {
     expect(findLocationCollisions([
-      active('a', 'alex-laptop1'),
-      { id: 'b', location: 'alex-laptop1', status: 'expired', worker_version: '0.25.0' },
+      active('a', 'dev-laptop1'),
+      { id: 'b', location: 'dev-laptop1', status: 'expired', worker_version: '0.25.0' },
     ])).toEqual([]);
   });
 

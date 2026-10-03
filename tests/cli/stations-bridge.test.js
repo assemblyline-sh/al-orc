@@ -12,8 +12,8 @@ const REMOTE = {
   p2: { id: 'p2', short_code: 'AP1', line: 'AP', name: 'AP Intake', dependencies: [] },
 };
 const LINES = [
-  { id: 'l1', code: 'VM', name: 'VM', location: 'alex-laptop1', stations: [] },
-  { id: 'l2', code: 'AP', name: 'AP', location: 'nowapps3', stations: [] },
+  { id: 'l1', code: 'VM', name: 'VM', location: 'dev-laptop1', stations: [] },
+  { id: 'l2', code: 'AP', name: 'AP', location: 'acme', stations: [] },
 ];
 
 function installFetch(calls) {

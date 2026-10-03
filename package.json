@@ -2,6 +2,13 @@
   "name": "@finopsbricks/fob-orc",
   "version": "0.2.0",
   "description": "Orchestrator app client + fob-orc CLI (2-in-1). Import the client in workers, or use the CLI.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finopsbricks/fob-orc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/finopsbricks/fob-orc/issues"
+  },
   "type": "module",
   "main": "src/index.js",
   "exports": {

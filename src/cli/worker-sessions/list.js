@@ -7,7 +7,7 @@ import { formatTable, formatDate, localTzLabel } from '../utils/format.js';
  * More than one worker at a location is legitimate scale-out on its own, but
  * if they run different code or out of different directories they are not
  * interchangeable — and the orchestrator hands each task to whoever polls
- * first. That is the 2026-08-11 failure mode: two workers on `alex-laptop1`,
+ * first. That is the 2026-08-11 failure mode: two workers on `dev-laptop1`,
  * one without the EM steps, so EM runs failed at random.
  *
  * D1 (one active session per org+location) now refuses the second worker, so

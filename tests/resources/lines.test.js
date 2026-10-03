@@ -20,16 +20,16 @@ describe('lines resource namespace (via fobOrc)', () => {
   afterEach(() => jest.restoreAllMocks());
 
   it('get() accepts a code and hits /api/v1/lines/<code>', async () => {
-    const calls = mockFetch([{ data: { id: 'l1', code: 'VM', location: 'alex-laptop1' } }]);
+    const calls = mockFetch([{ data: { id: 'l1', code: 'VM', location: 'dev-laptop1' } }]);
     const line = await fobOrc(CREDS).lines.get('VM');
-    expect(line).toEqual({ id: 'l1', code: 'VM', location: 'alex-laptop1' });
+    expect(line).toEqual({ id: 'l1', code: 'VM', location: 'dev-laptop1' });
     expect(calls[0].url).toBe('https://orchestrator.finopsbricks.com/api/v1/lines/VM');
   });
 
   it('list() forwards location and include_archived', async () => {
     const calls = mockFetch([{ data: [], page_context: { has_more: false } }]);
-    await fobOrc(CREDS).lines.list({ location: 'nowapps3', include_archived: true });
-    expect(calls[0].url).toContain('location=nowapps3');
+    await fobOrc(CREDS).lines.list({ location: 'acme', include_archived: true });
+    expect(calls[0].url).toContain('location=acme');
     expect(calls[0].url).toContain('include_archived=true');
   });
 
@@ -44,10 +44,10 @@ describe('lines resource namespace (via fobOrc)', () => {
 
   it('create() POSTs and update() PUTs by code', async () => {
     const calls = mockFetch([{ data: { id: 'l9', code: 'EM' } }, { data: { id: 'l9', code: 'EM', location: 'x' } }]);
-    await fobOrc(CREDS).lines.create({ code: 'EM', location: 'alex-laptop1' });
+    await fobOrc(CREDS).lines.create({ code: 'EM', location: 'dev-laptop1' });
     await fobOrc(CREDS).lines.update('EM', { location: 'x' });
     expect(calls[0]).toMatchObject({ method: 'POST', url: 'https://orchestrator.finopsbricks.com/api/v1/lines' });
-    expect(JSON.parse(calls[0].init.body)).toEqual({ code: 'EM', location: 'alex-laptop1' });
+    expect(JSON.parse(calls[0].init.body)).toEqual({ code: 'EM', location: 'dev-laptop1' });
     expect(calls[1]).toMatchObject({ method: 'PUT', url: 'https://orchestrator.finopsbricks.com/api/v1/lines/EM' });
   });
 });

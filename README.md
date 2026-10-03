@@ -13,8 +13,7 @@ const { work_record_id } = await orc.stations.run(id, { overrides: { dry_run: tr
 await orc.workRecords.cancel(wrId);
 ```
 
-Credentials are **explicit** — the client never reads `process.env` (see engineering-standards
-`no-ambient-configuration`). Multi-tenant callers construct one client per org: `fobOrc(orgACreds)`.
+Credentials are **explicit** — the client never reads `process.env`. Multi-tenant callers construct one client per org: `fobOrc(orgACreds)`.
 
 ## Namespaces
 

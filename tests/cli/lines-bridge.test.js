@@ -8,7 +8,7 @@ import { join } from 'node:path';
 // first and strips a stale per-station `location`.
 
 const LINES = {
-  l1: { id: 'l1', code: 'VM', name: 'Voice memos', description: null, location: 'alex-laptop1', stations: [{ id: 'p1', short_code: 'VM3', name: 'Vendor Match' }] },
+  l1: { id: 'l1', code: 'VM', name: 'Voice memos', description: null, location: 'dev-laptop1', stations: [{ id: 'p1', short_code: 'VM3', name: 'Vendor Match' }] },
 };
 const STATIONS = {
   p1: { id: 'p1', short_code: 'VM3', line: 'VM', name: 'Vendor Match', dependencies: [] },
@@ -59,21 +59,21 @@ describe('lines pull/push bridge', () => {
 
     expect(readdirSync('.orchestrator/lines')).toEqual(['VM.json']);
     const vm = JSON.parse(readFileSync('.orchestrator/lines/VM.json', 'utf8'));
-    expect(vm).toEqual({ id: 'l1', code: 'VM', name: 'Voice memos', description: null, location: 'alex-laptop1' });
+    expect(vm).toEqual({ id: 'l1', code: 'VM', name: 'Voice memos', description: null, location: 'dev-laptop1' });
   });
 
   it('push updates a line with an id and creates one without, rewriting the file with the new id', async () => {
     const calls = [];
     installFetch(calls);
     mkdirSync('.orchestrator/lines', { recursive: true });
-    writeFileSync('.orchestrator/lines/EM.json', JSON.stringify({ code: 'EM', name: 'Email', location: 'alex-laptop1' }));
+    writeFileSync('.orchestrator/lines/EM.json', JSON.stringify({ code: 'EM', name: 'Email', location: 'dev-laptop1' }));
 
     await pushLinesHandler({ all: true });
 
     const put = calls.find((c) => c.method === 'PUT' && c.path === '/api/v1/lines/l1');
-    expect(put.body).toEqual({ code: 'VM', name: 'Voice memos', description: null, location: 'alex-laptop1' });
+    expect(put.body).toEqual({ code: 'VM', name: 'Voice memos', description: null, location: 'dev-laptop1' });
     const post = calls.find((c) => c.method === 'POST' && c.path === '/api/v1/lines');
-    expect(post.body).toEqual({ code: 'EM', name: 'Email', location: 'alex-laptop1' });
+    expect(post.body).toEqual({ code: 'EM', name: 'Email', location: 'dev-laptop1' });
     expect(JSON.parse(readFileSync('.orchestrator/lines/EM.json', 'utf8')).id).toBe('l_new');
   });
 
@@ -92,7 +92,7 @@ describe('lines pull/push bridge', () => {
     installFetch(calls);
     const file = '.orchestrator/stations/VM3__vendor_match.json';
     const station = JSON.parse(readFileSync(file, 'utf8'));
-    writeFileSync(file, JSON.stringify({ ...station, location: 'alex-laptop' }));
+    writeFileSync(file, JSON.stringify({ ...station, location: 'dev-laptop' }));
 
     await pushStationsHandler({ all: true });
 
