@@ -1,5 +1,7 @@
 # @finopsbricks/fob-orc
 
+> **Assembly Line fork** of `~/ec2code/finopsbricks/cli/fob-orc` (remote `finopsbricks`), being converted per `engine-fork.md` in the assemblyline.sh repo. Workspace rules: `~/ec2code/assemblyline/CLAUDE.md`.
+
 Orchestrator app client + `fob-orc` CLI — a **2-in-1**: import the client in workers, or use the CLI.
 Part of the `fob-<tool>` wrapper family (see `fob-stm`, `fob-email`).
 
