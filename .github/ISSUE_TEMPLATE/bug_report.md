@@ -1,16 +1,16 @@
 ---
 name: Bug report
-about: Something fob-orc does wrong
+about: Something al-orc does wrong
 labels: bug
 ---
 
 **Command**
 
 ```
-fob-orc …
+al-orc …
 ```
 
-**What happened** (run with `FOB_DEBUG=1`; remove API keys, secrets and business data)
+**What happened** (run with `AL_DEBUG=1`; remove API keys, secrets and business data)
 
 ```
 ```
@@ -18,6 +18,6 @@ fob-orc …
 **What you expected**
 
 **Environment**
-- fob-orc version (`fob-orc --version`):
+- al-orc version (`al-orc --version`):
 - Node version (`node --version`):
 - OS:

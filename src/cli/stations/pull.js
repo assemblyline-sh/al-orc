@@ -19,15 +19,15 @@ function normalizeForLocal(station, idToShortCode) {
   return station;
 }
 
-/** `fob-orc stations pull` — write orchestrator station definitions to `.orchestrator/stations/`. */
+/** `al-orc stations pull` — write orchestrator station definitions to `.orchestrator/stations/`. */
 export async function pullStationsHandler(argv) {
   const { id, all } = argv;
 
   if (!id && !all) {
-    console.error('Usage: fob-orc stations pull <id|short_code>');
-    console.error('       fob-orc stations pull --all');
+    console.error('Usage: al-orc stations pull <id|short_code>');
+    console.error('       al-orc stations pull --all');
     console.error('');
-    console.error('Run "fob-orc stations list" to see available stations');
+    console.error('Run "al-orc stations list" to see available stations');
     process.exit(1);
   }
 
@@ -48,7 +48,7 @@ export async function pullStationsHandler(argv) {
   }
 
   // All stations — lines first, so every station's `line` code resolves locally
-  // (the worker refuses to boot on a station whose line file is missing).
+  // (the factory session refuses to start on a station whose line file is missing).
   console.log(`Saving to: ${getLinesDir()}/`);
   const line_count = await pullAllLines(orc);
   console.log(`Total: ${line_count} lines pulled`);

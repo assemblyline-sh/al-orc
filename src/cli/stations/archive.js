@@ -1,6 +1,6 @@
 import { clientFor } from '../_helpers.js';
 
-/** `fob-orc stations archive <id>` — hide from default list, preserve history, block execution. */
+/** `al-orc stations archive <id>` — hide from default list, preserve history, block execution. */
 export async function archiveStationHandler(argv) {
   const { id, json } = argv;
   const station = await clientFor().stations.archive(id);
@@ -12,7 +12,7 @@ export async function archiveStationHandler(argv) {
   console.log(`Archived station ${station?.short_code || id}.`);
 }
 
-/** `fob-orc stations unarchive <id>` — undo archive. */
+/** `al-orc stations unarchive <id>` — undo archive. */
 export async function unarchiveStationHandler(argv) {
   const { id, json } = argv;
   const station = await clientFor().stations.unarchive(id);

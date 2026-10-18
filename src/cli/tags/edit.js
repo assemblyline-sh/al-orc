@@ -1,6 +1,6 @@
 import { clientFor } from '../_helpers.js';
 
-/** `fob-orc tags edit <id>` — update a tag's fields. */
+/** `al-orc tags edit <id>` — update a tag's fields. */
 export async function editTagHandler(argv) {
   const { id, name, color, description, json } = argv;
 

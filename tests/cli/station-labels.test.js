@@ -5,7 +5,7 @@ import { jest } from '@jest/globals';
 
 const { buildStationLabelMap, stationLabel } = await import('../../src/cli/utils/station-labels.js');
 
-/** A fake fobOrc client whose stations.getAll behaves as `impl` says. */
+/** A fake alOrc client whose stations.getAll behaves as `impl` says. */
 function fakeOrc(impl) {
   return { stations: { getAll: impl } };
 }

@@ -1,13 +1,13 @@
 {
-  "name": "@finopsbricks/fob-orc",
-  "version": "0.2.0",
-  "description": "Orchestrator app client + fob-orc CLI (2-in-1). Import the client in workers, or use the CLI.",
+  "name": "@assemblyline/al-orc",
+  "version": "0.1.0",
+  "description": "Assembly Line Orchestrator client + al-orc CLI (2-in-1): push lines and stations, run them, read work records.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/finopsbricks/fob-orc.git"
+    "url": "git+https://github.com/assemblyline-sh/al-orc.git"
   },
   "bugs": {
-    "url": "https://github.com/finopsbricks/fob-orc/issues"
+    "url": "https://github.com/assemblyline-sh/al-orc/issues"
   },
   "type": "module",
   "main": "src/index.js",
@@ -16,7 +16,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "fob-orc": "./bin/cli.js"
+    "al-orc": "./bin/cli.js"
   },
   "scripts": {
     "start": "node bin/cli.js",
@@ -28,7 +28,7 @@
     "orchestrator",
     "api-client",
     "cli",
-    "finops"
+    "assembly-line"
   ],
   "license": "Apache-2.0",
   "files": [
@@ -55,5 +55,7 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "homepage": "https://assemblyline.sh",
+  "author": "Assembly Line"
 }

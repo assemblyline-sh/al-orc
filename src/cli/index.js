@@ -1,12 +1,12 @@
 /**
  * CLI entry point — three-level command tree:
  *
- *   fob-orc <resource> <action> [target] [options]
+ *   al-orc <resource> <action> [target] [options]
  *
  * The orchestrator control plane (canonical station/process definitions, work
- * records, tags, supporting docs). Credentials come from ~/.fob/fob-orc/config.yml;
+ * records, tags, supporting docs). Credentials come from ~/.assemblyline/al-orc/config.yml;
  * `config` manages them. (Local run-state / pm2 / step execution live in the
- * sibling `fob-worker` CLI, not here.)
+ * sibling `al-factory` CLI, not here.)
  */
 
 import yargs from 'yargs';
@@ -18,13 +18,13 @@ import { buildStationsSubcommands } from './stations/index.js';
 import { buildWorkRecordsSubcommands } from './work-records/index.js';
 import { buildTagsSubcommands } from './tags/index.js';
 import { buildSupportingDocsSubcommands } from './supporting-docs/index.js';
-import { buildWorkerSessionsSubcommands } from './worker-sessions/index.js';
+import { buildFactorySessionsSubcommands } from './factory-sessions/index.js';
 import { safe, localOptions } from './_helpers.js';
 import { statusHandler } from './status.js';
 
 export function run(argv) {
   return yargs(argv)
-    .scriptName('fob-orc')
+    .scriptName('al-orc')
     .usage('$0 <resource> <action> [target] [options]')
     .option('profile', {
       alias: 'org',
@@ -35,19 +35,19 @@ export function run(argv) {
       if (argv.profile) setOrgOverride(argv.profile);
     })
     .command('config <resource>', 'Manage credential profiles (alias: orgs)', buildConfigSubcommands)
-    .command('lines <action>', 'Manage lines (a line owns the worker location its stations run at)', buildLinesSubcommands)
+    .command('lines <action>', 'Manage lines (a line owns the location its stations run at)', buildLinesSubcommands)
     .command('stations <action>', 'Query and run stations (orchestrator definitions)', buildStationsSubcommands)
     .command('work-records <action>', 'Query and manage work records', buildWorkRecordsSubcommands)
     .command('tags <action>', 'Manage tags', buildTagsSubcommands)
     .command('supporting-docs <action>', 'View and download supporting documents', buildSupportingDocsSubcommands)
-    .command('worker-sessions <action>', 'Inspect worker processes and what they ran', buildWorkerSessionsSubcommands)
+    .command('factory-sessions <action>', 'Inspect factory sessions and what they ran', buildFactorySessionsSubcommands)
     .command(
       'status',
       'Check connectivity to the orchestrator (active profile)',
       (y) => localOptions(y).option('json', { describe: 'Output raw JSON', type: 'boolean' }),
       safe(statusHandler),
     )
-    .demandCommand(1, 'Specify a resource. Try `fob-orc --help`.')
+    .demandCommand(1, 'Specify a resource. Try `al-orc --help`.')
     .strict()
     .help()
     .alias('h', 'help')

@@ -2,7 +2,7 @@ import { clientFor } from '../_helpers.js';
 import { formatHeader, formatField, formatTable, formatSection, formatDate, formatDuration, localTzLabel } from '../utils/format.js';
 import { buildStationLabelMap, stationLabel } from '../utils/station-labels.js';
 
-/** `fob-orc work-records show <id>` — one work record, with optional detail sections. */
+/** `al-orc work-records show <id>` — one work record, with optional detail sections. */
 export async function showWorkRecordHandler(argv) {
   const { id, report, steps, supportingDocs, activity, all, json } = argv;
 
@@ -31,9 +31,9 @@ export async function showWorkRecordHandler(argv) {
   console.log(formatHeader('Work Record', record.id, record.status));
   console.log('');
   const lw = 14;
-  // `process` is the station id; show its short_code when it resolves.
+  // `station` is the station id; show its short_code when it resolves.
   const labels = await buildStationLabelMap(orc);
-  console.log(formatField('Station', stationLabel(record.process, labels), lw));
+  console.log(formatField('Station', stationLabel(record.station, labels), lw));
   console.log(formatField('Status', record.status, lw));
   console.log(formatField('Duration', formatDuration(record.started_at, record.completed_at), lw));
   console.log(formatField('Created', formatDate(record.created_at), lw));
@@ -69,7 +69,7 @@ export async function showWorkRecordHandler(argv) {
     if (docs.length) {
       const rows = docs.map((d) => [d.id, d.type || '—', d.title || '—', formatDate(d.created_at)]);
       console.log(formatTable(['ID', 'TYPE', 'TITLE', `CREATED (${localTzLabel()})`], rows));
-      console.log('\nUse `fob-orc supporting-docs show <id>` to view content.');
+      console.log('\nUse `al-orc supporting-docs show <id>` to view content.');
     } else {
       console.log('No supporting documents.');
     }
@@ -79,17 +79,17 @@ export async function showWorkRecordHandler(argv) {
     const events = await orc.workRecords.activity(id).catch(() => null);
     console.log(formatSection(`Activity (${events?.length ?? 0})`));
     if (events?.length) {
-      // Worker attribution rides in `properties` on the claim/complete/fail
+      // Factory session attribution rides in `properties` on the claim/complete/fail
       // events. It was being fetched and dropped, which is why diagnosing a
-      // bad worker meant hand-querying the API. `fob orc worker-sessions show
+      // bad factory session meant hand-querying the API. `al-orc factory-sessions show
       // <session>` takes it from here.
       const rows = events.map((e) => [
         formatDate(e.created_at),
         e.event || e.type || '—',
-        e.properties?.worker_name || '—',
-        e.properties?.worker_session_id || '—',
+        e.properties?.factory_name || '—',
+        e.properties?.factory_session_id || '—',
       ]);
-      console.log(formatTable([`TIME (${localTzLabel()})`, 'EVENT', 'WORKER', 'SESSION'], rows));
+      console.log(formatTable([`TIME (${localTzLabel()})`, 'EVENT', 'FACTORY', 'SESSION'], rows));
     } else if (events) {
       console.log('No activity events.');
     } else {

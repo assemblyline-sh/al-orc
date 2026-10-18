@@ -1,7 +1,7 @@
 import { clientFor } from '../_helpers.js';
 import { editEntityTags } from '../shared/edit-tags.js';
 
-/** `fob-orc work-records edit <id>` — add/remove tags on a work record. */
+/** `al-orc work-records edit <id>` — add/remove tags on a work record. */
 export async function editWorkRecordHandler(argv) {
   const { id, addTag, removeTag } = argv;
 
@@ -9,7 +9,7 @@ export async function editWorkRecordHandler(argv) {
   const removeTags = removeTag ? [].concat(removeTag) : [];
 
   if (addTags.length === 0 && removeTags.length === 0) {
-    console.error('Usage: fob-orc work-records edit <id> --add-tag <name> [--remove-tag <name>]');
+    console.error('Usage: al-orc work-records edit <id> --add-tag <name> [--remove-tag <name>]');
     console.error('At least one --add-tag or --remove-tag is required');
     process.exit(1);
   }

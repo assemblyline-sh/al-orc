@@ -1,12 +1,11 @@
 /**
- * A work record — one run of a station against an item, as returned by
+ * A work record — one run of a station, as returned by
  * `/api/v1/work-records`.
  * @typedef {Object} WorkRecord
  * @property {string} id
- * @property {string} [process]  Station id (the API field keeps "process" wording).
+ * @property {string} [station]  Station id.
  * @property {string} [status]
  * @property {(string|Tag)[]} [tags]
- * @property {Record<string, any>} [item_snapshot]
  * @property {Record<string, any>} [report]
  * @property {Record<string, any>[]} [step_outputs]
  * @property {string} [created_at]

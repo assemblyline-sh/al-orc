@@ -24,8 +24,8 @@ function installFetch(calls) {
     else if (method === 'GET' && p.startsWith('/api/v1/lines/')) data = Object.values(LINES).find((l) => l.code === p.split('/').pop());
     else if (method === 'POST' && p === '/api/v1/lines') data = { id: 'l_new', ...init.body && JSON.parse(init.body) };
     else if (method === 'PUT' && p.startsWith('/api/v1/lines/')) data = { ...LINES.l1, ...JSON.parse(init.body) };
-    else if (method === 'GET' && p === '/api/v1/processes') data = Object.values(STATIONS);
-    else if (method === 'GET' && p.startsWith('/api/v1/processes/')) data = STATIONS[p.split('/').pop()];
+    else if (method === 'GET' && p === '/api/v1/stations') data = Object.values(STATIONS);
+    else if (method === 'GET' && p.startsWith('/api/v1/stations/')) data = STATIONS[p.split('/').pop()];
     else if (method === 'GET' && p === '/api/v1/tags') data = [];
     else data = { id: p.split('/').pop() };
     return { ok: true, status: 200, statusText: 'OK', text: async () => JSON.stringify({ data }) };
@@ -37,10 +37,10 @@ let pullLinesHandler, pushLinesHandler, pullStationsHandler, pushStationsHandler
 
 beforeAll(async () => {
   const cfgDir = mkdtempSync(join(tmpdir(), 'orc-cfg-'));
-  process.env.FOB_ORC_CONFIG_DIR = cfgDir;
+  process.env.AL_ORC_CONFIG_DIR = cfgDir;
   writeFileSync(
     join(cfgDir, 'config.yml'),
-    'current_org: acme\norgs:\n  acme:\n    api_url: https://orchestrator.finopsbricks.com\n    api_key: k\n    api_secret: s\n',
+    'current_org: acme\norgs:\n  acme:\n    api_url: https://orchestrator.assemblyline.sh\n    api_key: k\n    api_secret: s\n',
   );
   process.chdir(mkdtempSync(join(tmpdir(), 'orc-work-')));
   ({ pullLinesHandler } = await import('../../src/cli/lines/pull.js'));
@@ -97,11 +97,11 @@ describe('lines pull/push bridge', () => {
     await pushStationsHandler({ all: true });
 
     const first_line_call = calls.findIndex((c) => c.path.startsWith('/api/v1/lines') && c.method !== 'GET');
-    const first_station_call = calls.findIndex((c) => c.path.startsWith('/api/v1/processes') && c.method !== 'GET');
+    const first_station_call = calls.findIndex((c) => c.path.startsWith('/api/v1/stations') && c.method !== 'GET');
     expect(first_line_call).toBeGreaterThanOrEqual(0);
     expect(first_line_call).toBeLessThan(first_station_call);
 
-    const put = calls.find((c) => c.method === 'PUT' && c.path === '/api/v1/processes/p1');
+    const put = calls.find((c) => c.method === 'PUT' && c.path === '/api/v1/stations/p1');
     expect(put.body).not.toHaveProperty('location');
     expect(put.body.line).toBe('VM');
   });

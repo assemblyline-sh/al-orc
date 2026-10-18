@@ -2,7 +2,7 @@ import { writeFileSync } from 'node:fs';
 import { clientFor } from '../_helpers.js';
 import { formatHeader, formatField, formatBytes, formatDate } from '../utils/format.js';
 
-/** `fob-orc supporting-docs show <id>` — metadata (+ markdown content); --save <path> downloads files. */
+/** `al-orc supporting-docs show <id>` — metadata (+ markdown content); --save <path> downloads files. */
 export async function showSupportingDocHandler(argv) {
   const { id, save, json } = argv;
 

@@ -1,6 +1,6 @@
 import { clientFor } from '../_helpers.js';
 
-/** `fob-orc tags create <name>` — create a tag. */
+/** `al-orc tags create <name>` — create a tag. */
 export async function createTagHandler(argv) {
   const { name, color, description, json } = argv;
 

@@ -1,6 +1,6 @@
 import { clientFor } from './_helpers.js';
 
-/** `fob-orc status` — probe connectivity to the orchestrator with the active profile. */
+/** `al-orc status` — probe connectivity to the orchestrator with the active profile. */
 export async function statusHandler(argv) {
   const { json } = argv || {};
   const result = await clientFor().checkConnection();
@@ -12,6 +12,8 @@ export async function statusHandler(argv) {
 
   if (result.connected) {
     console.log('Status: Connected');
+    if (result.org) console.log(`Org:    ${result.org.name} (${result.org.id})`);
+    if (result.api_key) console.log(`Key:    ${result.api_key.name} (${result.api_key.key})`);
   } else {
     console.log('Status: Not connected');
     if (result.error) console.log(`Error:  ${result.error}`);

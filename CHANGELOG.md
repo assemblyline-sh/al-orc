@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-19
+
+First release as `@assemblyline/al-orc`, forked from `@finopsbricks/fob-orc` 0.2.0. Entries
+below 0.1.0 are the history of `fob-orc`.
+
+### Changed
+- **BREAKING:** package `@assemblyline/al-orc`, binary `al-orc`, client factory `alOrc()`.
+- **BREAKING:** default API URL `https://orchestrator.assemblyline.sh`.
+- **BREAKING:** profiles live in `~/.assemblyline/al-orc/config.yml`; override with
+  `AL_ORC_CONFIG_DIR`. `AL_DEBUG=1` prints stacks.
+- **BREAKING:** station routes are `/api/v1/stations/*`; work records filter by `?station=`
+  and carry the station id in `station`.
+- **BREAKING:** `worker-sessions` is `factory-sessions` (`orc.factorySessions`,
+  `/api/v1/factory-sessions`); fields `factory_name` and `factory_version`.
+- `status` / `checkConnection()` read `GET /api/v1/me` and print the org and key. The old
+  probe used the session poll, which could claim a pending step.
+
+### Added
+- `orc.me()`: the org and API key the credentials belong to.
+
+### Removed
+- **BREAKING:** `stations run --item` and the `item` option of `orc.stations.run()`.
+
 ## [0.2.0] - 2026-09-05
 
 ### Added

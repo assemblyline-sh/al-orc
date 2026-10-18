@@ -1,10 +1,10 @@
-# Contributing to fob-orc
+# Contributing to al-orc
 
 Thanks for helping. Bug reports and pull requests are welcome.
 
 ## Before you open an issue
 
-- Run with `FOB_DEBUG=1` and include the command and error output.
+- Run with `AL_DEBUG=1` and include the command and error output.
 - **Remove secrets first.** Never paste an API key or API secret. Replace business data in
   stations, work records and documents with placeholders.
 

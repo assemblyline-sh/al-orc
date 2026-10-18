@@ -19,7 +19,7 @@
  * printing the raw id. Losing the nicer label must never sink a `work-records
  * list` that would otherwise have worked.
  *
- * @param {any} orc A credential-bound fobOrc client.
+ * @param {any} orc A credential-bound alOrc client.
  * @returns {Promise<Map<string, string>>}
  */
 export async function buildStationLabelMap(orc) {
@@ -35,7 +35,7 @@ export async function buildStationLabelMap(orc) {
 
 /**
  * Label a station id for display: its short_code if known, else the raw id
- * (still useful — it's what `fob orc stations show <id>` takes), else the
+ * (still useful — it's what `al-orc stations show <id>` takes), else the
  * em-dash placeholder the other formatters use for absent values.
  *
  * @param {string|undefined|null} id

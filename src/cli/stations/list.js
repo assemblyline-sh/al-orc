@@ -1,7 +1,7 @@
 import { clientFor } from '../_helpers.js';
 import { formatTable } from '../utils/format.js';
 
-/** `fob-orc stations list` — canonical station definitions from the orchestrator. */
+/** `al-orc stations list` — canonical station definitions from the orchestrator. */
 export async function listStationsHandler(argv) {
   const { tag, line, json, includeArchived } = argv || {};
 

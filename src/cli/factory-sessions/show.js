@@ -1,15 +1,15 @@
 import { clientFor } from '../_helpers.js';
 import { formatTable, formatDate, formatField, formatSection, localTzLabel, truncate } from '../utils/format.js';
 
-/** `fob-orc worker-sessions show <id>` — one worker process, and what it did. */
-export async function showWorkerSessionHandler(argv) {
+/** `al-orc factory-sessions show <id>` — one factory session, and what it did. */
+export async function showFactorySessionHandler(argv) {
   const { id, tasks, json } = argv;
 
   const orc = clientFor();
-  const session = await orc.workerSessions.get(id);
+  const session = await orc.factorySessions.get(id);
 
   if (!session) {
-    console.log(`Worker session ${id} not found`);
+    console.log(`Factory session ${id} not found`);
     return;
   }
 
@@ -18,13 +18,13 @@ export async function showWorkerSessionHandler(argv) {
     return;
   }
 
-  console.log(formatSection(`Worker session ${session.id}`));
-  console.log(formatField('Worker', session.worker_name || '—', 14));
+  console.log(formatSection(`Factory session ${session.id}`));
+  console.log(formatField('Factory', session.factory_name || '—', 14));
   console.log(formatField('Location', session.location || '—', 14));
   console.log(formatField('Status', session.status, 14));
   console.log(formatField('Host', session.hostname || '—', 14));
   console.log(formatField('PID', session.pid != null ? String(session.pid) : '—', 14));
-  console.log(formatField('Version', session.worker_version || '—', 14));
+  console.log(formatField('Version', session.factory_version || '—', 14));
   console.log(formatField('Directory', session.cwd || '—', 14));
   console.log(formatField('Started', formatDate(session.started_at), 14));
   console.log(formatField('Last seen', formatDate(session.last_seen_at), 14));
@@ -44,7 +44,7 @@ export async function showWorkerSessionHandler(argv) {
       breakdown.map((s) => [s.step_slug, String(s.completed), String(s.failed), String(s.other)]),
     ));
 
-    // The stale-deploy signature: some slugs work, others never do. A worker
+    // The stale-deploy signature: some slugs work, others never do. A factory session
     // with bad credentials or a dead upstream fails everything; one whose code
     // predates a station fails only that station's slugs.
     const all_fail = breakdown.filter((s) => s.completed === 0 && s.failed > 0);
@@ -53,7 +53,7 @@ export async function showWorkerSessionHandler(argv) {
       console.log('');
       console.log(`!  ${all_fail.length} step(s) never succeeded here while ${any_ok.length} did.`);
       console.log(`   Never succeeded: ${all_fail.map((s) => s.step_slug).join(', ')}`);
-      console.log("   A worker that handles some steps and no others usually predates them — check its version and restart it.");
+      console.log("   A factory session that handles some steps and no others usually predates them — check its version and restart it.");
     }
   }
 

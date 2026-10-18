@@ -6,9 +6,9 @@ import { removeConfigHandler } from './remove.js';
 import { currentConfigHandler } from './current.js';
 
 /**
- * The multi-tenant object is a "profile" — a named set of credentials. fob-orc's
+ * The multi-tenant object is a "profile" — a named set of credentials. al-orc's
  * profiles map 1:1 to orchestrator orgs, so `orgs` is offered as an alias.
- * `config` is a namespace, not the object: `fob-orc config profiles <action>`.
+ * `config` is a namespace, not the object: `al-orc config profiles <action>`.
  */
 function buildProfilesSubcommands(yargs) {
   return yargs

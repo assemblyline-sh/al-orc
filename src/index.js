@@ -1,21 +1,21 @@
 // @ts-check
 /**
- * @finopsbricks/fob-orc — the importable orchestrator client.
+ * @assemblyline/al-orc — the importable orchestrator client.
  *
  * Construct a client with credentials bound once, then call resource namespaces:
  *
- *   import { fobOrc } from '@finopsbricks/fob-orc';
- *   const orc = fobOrc({ api_key, api_secret });   // api_url optional (defaults to the hosted origin)
+ *   import { alOrc } from '@assemblyline/al-orc';
+ *   const orc = alOrc({ api_key, api_secret });   // api_url optional (defaults to the hosted origin)
  *   const { data } = await orc.stations.list();
  *   const lines = await orc.lines.getAll();
  *   const wr = await orc.stations.run(id, { overrides: { dry_run: true } });
  *
- * The `fob-orc` CLI builds the same client and calls these same namespaces — so
+ * The `al-orc` CLI builds the same client and calls these same namespaces — so
  * the CLI and the library can never drift: every endpoint is defined once, in
  * src/resources/.
  *
- * Multi-tenant workers construct one client per org: `fobOrc(orgACreds)`,
- * `fobOrc(orgBCreds)`.
+ * Code serving several orgs constructs one client per org: `alOrc(orgACreds)`,
+ * `alOrc(orgBCreds)`.
  */
 
 import { createTransport, apiGet } from './http.js';
@@ -24,7 +24,7 @@ import { buildStations } from './resources/stations.js';
 import { buildWorkRecords } from './resources/work-records.js';
 import { buildTags } from './resources/tags.js';
 import { buildSupportingDocs } from './resources/supporting-docs.js';
-import { buildWorkerSessions } from './resources/worker-sessions.js';
+import { buildFactorySessions } from './resources/factory-sessions.js';
 
 /**
  * @typedef {import('./types/general/index.js').Credentials} Credentials
@@ -33,20 +33,28 @@ import { buildWorkerSessions } from './resources/worker-sessions.js';
  * @typedef {import('./resources/work-records.js').WorkRecordsApi} WorkRecordsApi
  * @typedef {import('./resources/tags.js').TagsApi} TagsApi
  * @typedef {import('./resources/supporting-docs.js').SupportingDocsApi} SupportingDocsApi
- * @typedef {import('./resources/worker-sessions.js').WorkerSessionsApi} WorkerSessionsApi
+ * @typedef {import('./resources/factory-sessions.js').FactorySessionsApi} FactorySessionsApi
+ */
+
+/**
+ * Who the credentials belong to, from `GET /api/v1/me`.
+ * @typedef {Object} Me
+ * @property {{ id: string, name: string }} org
+ * @property {{ id: string, name: string, key: string }} api_key
  */
 
 /**
  * The orchestrator client. Explicit (not inferred) so callers — CLI handlers and
- * workers alike — get a checked, autocompleted surface.
+ * factories alike — get a checked, autocompleted surface.
  * @typedef {Object} OrcClient
  * @property {LinesApi} lines
  * @property {StationsApi} stations
  * @property {WorkRecordsApi} workRecords
  * @property {TagsApi} tags
  * @property {SupportingDocsApi} supportingDocs
- * @property {WorkerSessionsApi} workerSessions
- * @property {() => Promise<{ connected: boolean, status?: number, error?: string }>} checkConnection
+ * @property {FactorySessionsApi} factorySessions
+ * @property {() => Promise<Me|null>} me
+ * @property {() => Promise<{ connected: boolean, org?: Me['org'], api_key?: Me['api_key'], status?: number, error?: string }>} checkConnection
  */
 
 /**
@@ -56,7 +64,7 @@ import { buildWorkerSessions } from './resources/worker-sessions.js';
  *   environment — inject them explicitly.
  * @returns {OrcClient}
  */
-export function fobOrc(credentials) {
+export function alOrc(credentials) {
   const ctx = createTransport(credentials);
   return {
     lines: buildLines(ctx),
@@ -64,12 +72,14 @@ export function fobOrc(credentials) {
     workRecords: buildWorkRecords(ctx),
     tags: buildTags(ctx),
     supportingDocs: buildSupportingDocs(ctx),
-    workerSessions: buildWorkerSessions(ctx),
-    /** Probe the orchestrator's worker-poll endpoint; never throws. */
+    factorySessions: buildFactorySessions(ctx),
+    /** The org and API key these credentials belong to. */
+    me: () => ctx.get('/api/v1/me').then((r) => r?.data ?? null),
+    /** Check the credentials against the orchestrator; never throws and never claims work. */
     checkConnection: async () => {
       try {
-        await apiGet('/api/worker/poll', { credentials });
-        return { connected: true };
+        const { data } = await apiGet('/api/v1/me', { credentials });
+        return { connected: true, org: data?.org, api_key: data?.api_key };
       } catch (/** @type {any} */ error) {
         return { connected: false, status: error?.status, error: error?.message };
       }

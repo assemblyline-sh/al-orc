@@ -1,10 +1,10 @@
 /**
  * Local line file cache — `.orchestrator/lines/<CODE>.json`, one per line.
  *
- * A line file carries what the worker needs to route (`code`, `location`) and
+ * A line file carries what the factory needs to route (`code`, `location`) and
  * what people need to recognise it (`name`, `description`). Station files
- * reference their line by `code`; `@fob/lib-worker` joins the two to decide
- * which stations this worker serves.
+ * reference their line by `code`; `@assemblyline/lib-factory` joins the two to decide
+ * which stations this factory session serves.
  */
 
 import fs from 'node:fs';

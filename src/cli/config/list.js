@@ -10,7 +10,7 @@ export async function listConfigHandler(argv) {
   }
 
   if (profiles.length === 0) {
-    console.log('(no profiles configured — run `fob-orc config profiles add <name>`)');
+    console.log('(no profiles configured — run `al-orc config profiles add <name>`)');
     return;
   }
 

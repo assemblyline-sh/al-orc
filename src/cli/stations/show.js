@@ -2,7 +2,7 @@ import { clientFor } from '../_helpers.js';
 import { buildStationLabelMap, stationLabel } from '../utils/station-labels.js';
 import { formatHeader, formatField, formatTable, formatSection, formatDate, formatDuration, localTzLabel, truncate } from '../utils/format.js';
 
-/** `fob-orc stations show <id>` — one station's definition, optionally with recent work records. */
+/** `al-orc stations show <id>` — one station's definition, optionally with recent work records. */
 export async function showStationHandler(argv) {
   const { id, workRecords, all, json } = argv;
 
@@ -64,7 +64,7 @@ export async function showStationHandler(argv) {
         rows,
       ));
       // `--station` takes an id or a short_code — suggest the readable form.
-      console.log(`\nUse \`fob-orc work-records list --station ${station.short_code || station.id}\` for the full list.`);
+      console.log(`\nUse \`al-orc work-records list --station ${station.short_code || station.id}\` for the full list.`);
     } else {
       console.log('No work records found.');
     }

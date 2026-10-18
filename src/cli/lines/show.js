@@ -1,7 +1,7 @@
 import { clientFor } from '../_helpers.js';
 import { formatHeader, formatField, formatTable, formatSection } from '../utils/format.js';
 
-/** `fob-orc lines show <code|id>` — one line's definition and its stations. */
+/** `al-orc lines show <code|id>` — one line's definition and its stations. */
 export async function showLineHandler(argv) {
   const { id, json } = argv;
 

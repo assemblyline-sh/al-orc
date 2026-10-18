@@ -4,7 +4,7 @@ import { loadStation, loadStationScenario, listStationScenarios } from '../utils
 // yargs auto-fills these on every argv; everything else is a candidate override.
 const YARGS_KEYS = new Set(['_', '$0', 'help', 'version', 'h', 'v', 'profile', 'org']);
 // Flags this command owns explicitly — not treated as step overrides.
-const COMMAND_KEYS = new Set(['id', 'item', 'scenario', 'json']);
+const COMMAND_KEYS = new Set(['id', 'scenario', 'json']);
 
 /**
  * Build the merged step-override map: a local scenario file (if any) applied
@@ -54,15 +54,15 @@ function formatOverridesLine(overrides, fromScenario, fromCli, scenarioName) {
     .join(', ');
 }
 
-/** `fob-orc stations run <id>` — trigger an orchestrator run; returns a work record id. */
+/** `al-orc stations run <id>` — trigger an orchestrator run; returns a work record id. */
 export async function runStationHandler(argv) {
-  const { id, item, scenario, json } = argv;
+  const { id, scenario, json } = argv;
 
   // A local station file is only needed to resolve short_code for scenario lookup.
   const station = loadStation(id);
   if (!station && scenario) {
     console.error(`Error: --scenario requires a local station definition for ${id}.`);
-    console.error(`Run "fob-orc stations pull ${id}" first.`);
+    console.error(`Run "al-orc stations pull ${id}" first.`);
     process.exit(1);
   }
 
@@ -70,7 +70,7 @@ export async function runStationHandler(argv) {
   const hasOverrides = Object.keys(overrides).length > 0;
 
   const orc = clientFor();
-  const result = await orc.stations.run(id, { item, overrides: hasOverrides ? overrides : undefined });
+  const result = await orc.stations.run(id, { overrides: hasOverrides ? overrides : undefined });
 
   if (json) {
     console.log(JSON.stringify(result, null, 2));
@@ -83,5 +83,5 @@ export async function runStationHandler(argv) {
   console.log(`Triggered:   ${id}`);
   console.log(`Work Record: ${result?.work_record_id ?? '—'}`);
   console.log('');
-  console.log(`Use \`fob-orc work-records show ${result?.work_record_id ?? '<id>'}\` to check status.`);
+  console.log(`Use \`al-orc work-records show ${result?.work_record_id ?? '<id>'}\` to check status.`);
 }

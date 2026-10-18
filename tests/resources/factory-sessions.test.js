@@ -1,9 +1,9 @@
 import { jest } from '@jest/globals';
 
-// Contract for the worker-sessions namespace, plus the collision detector that
+// Contract for the factory-sessions namespace, plus the collision detector that
 // carries the only real branching on the CLI side.
-const { fobOrc } = await import('../../src/index.js');
-const { findLocationCollisions } = await import('../../src/cli/worker-sessions/list.js');
+const { alOrc } = await import('../../src/index.js');
+const { findLocationCollisions } = await import('../../src/cli/factory-sessions/list.js');
 
 function mockFetch(responses) {
   const calls = [];
@@ -15,23 +15,23 @@ function mockFetch(responses) {
   return calls;
 }
 
-const CREDS = { api_url: 'https://orchestrator.finopsbricks.com', api_key: 'k', api_secret: 's' };
+const CREDS = { api_url: 'https://orchestrator.assemblyline.sh', api_key: 'k', api_secret: 's' };
 
-describe('workerSessions resource namespace (via fobOrc)', () => {
+describe('factorySessions resource namespace (via alOrc)', () => {
   afterEach(() => jest.restoreAllMocks());
 
-  it('list() hits /api/v1/worker-sessions and returns the envelope', async () => {
+  it('list() hits /api/v1/factory-sessions and returns the envelope', async () => {
     const calls = mockFetch([{ data: [{ id: 'OJz4vMuKJ096' }], page_context: { total: 1 } }]);
-    const res = await fobOrc(CREDS).workerSessions.list();
+    const res = await alOrc(CREDS).factorySessions.list();
 
-    expect(calls[0].url).toContain('/api/v1/worker-sessions');
+    expect(calls[0].url).toContain('/api/v1/factory-sessions');
     expect(res.data).toEqual([{ id: 'OJz4vMuKJ096' }]);
     expect(res.page_context).toEqual({ total: 1 });
   });
 
   it('list() passes filters through as query params', async () => {
     const calls = mockFetch([{ data: [] }]);
-    await fobOrc(CREDS).workerSessions.list({ status: 'active', location: 'dev-laptop1' });
+    await alOrc(CREDS).factorySessions.list({ status: 'active', location: 'dev-laptop1' });
 
     expect(calls[0].url).toContain('status=active');
     expect(calls[0].url).toContain('location=dev-laptop1');
@@ -39,25 +39,25 @@ describe('workerSessions resource namespace (via fobOrc)', () => {
 
   it('get() unwraps the single record', async () => {
     mockFetch([{ data: { id: '8ctRxo4aXw4J', slug_breakdown: [] } }]);
-    const session = await fobOrc(CREDS).workerSessions.get('8ctRxo4aXw4J');
+    const session = await alOrc(CREDS).factorySessions.get('8ctRxo4aXw4J');
 
     expect(session.id).toBe('8ctRxo4aXw4J');
   });
 
   it('get() encodes the id', async () => {
     const calls = mockFetch([{ data: null }]);
-    await fobOrc(CREDS).workerSessions.get('a/b');
+    await alOrc(CREDS).factorySessions.get('a/b');
 
-    expect(calls[0].url).toContain('/api/v1/worker-sessions/a%2Fb');
+    expect(calls[0].url).toContain('/api/v1/factory-sessions/a%2Fb');
   });
 });
 
 describe('findLocationCollisions', () => {
   const active = (id, location, extra = {}) => ({
-    id, location, status: 'active', worker_version: '0.32.0', cwd: '/w', ...extra,
+    id, location, status: 'active', factory_version: '0.32.0', cwd: '/w', ...extra,
   });
 
-  it('is silent for one worker per location', () => {
+  it('is silent for one factory per location', () => {
     expect(findLocationCollisions([
       active('a', 'dev-laptop1'),
       active('b', 'acme'),
@@ -66,8 +66,8 @@ describe('findLocationCollisions', () => {
 
   it('flags the 2026-08-11 incident: two versions on one location', () => {
     const found = findLocationCollisions([
-      active('OJz4vMuKJ096', 'dev-laptop1', { worker_version: '0.32.0', cwd: '/home/dev/w' }),
-      active('8ctRxo4aXw4J', 'dev-laptop1', { worker_version: '0.25.0', cwd: '/home/dev/w' }),
+      active('OJz4vMuKJ096', 'dev-laptop1', { factory_version: '0.32.0', cwd: '/home/dev/w' }),
+      active('8ctRxo4aXw4J', 'dev-laptop1', { factory_version: '0.25.0', cwd: '/home/dev/w' }),
     ]);
 
     expect(found).toHaveLength(1);
@@ -76,14 +76,14 @@ describe('findLocationCollisions', () => {
     expect(found[0].versions.sort()).toEqual(['0.25.0', '0.32.0']);
   });
 
-  it('ignores expired sessions — only concurrent workers collide', () => {
+  it('ignores expired sessions — only concurrent factories collide', () => {
     expect(findLocationCollisions([
       active('a', 'dev-laptop1'),
-      { id: 'b', location: 'dev-laptop1', status: 'expired', worker_version: '0.25.0' },
+      { id: 'b', location: 'dev-laptop1', status: 'expired', factory_version: '0.25.0' },
     ])).toEqual([]);
   });
 
-  it('still reports same-version workers sharing a location', () => {
+  it('still reports same-version factories sharing a location', () => {
     // Legitimate scale-out in principle, but never intended under D1 — and
     // differing cwds would still split workpiece bundles across filesystems.
     const found = findLocationCollisions([

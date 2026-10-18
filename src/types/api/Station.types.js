@@ -1,11 +1,10 @@
 /**
- * A station (the orchestrator API/DB still calls this a "process"), as returned
- * by `/api/v1/processes`. Mirrors the orchestrator's public process fields.
+ * A station, as returned by `/api/v1/stations`.
  * @typedef {Object} Station
  * @property {string} id
  * @property {string} name
  * @property {string} [short_code]
- * @property {string} line              Line code. The line owns the worker location; a station has none of its own.
+ * @property {string} line              Line code. The line owns the location; a station has none of its own.
  * @property {string} [description]
  * @property {StationStep[]} [steps]
  * @property {string[]} [dependencies]  Station ids or short_codes this one depends on.

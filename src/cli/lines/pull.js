@@ -3,7 +3,7 @@ import { saveLine, getLinesDir } from '../utils/line-files.js';
 
 /**
  * Write every line to `.orchestrator/lines/`. Shared with `stations pull --all`,
- * which pulls lines first so a worker never has station files whose line it
+ * which pulls lines first so a factory repo never has station files whose line it
  * cannot resolve.
  * @returns {Promise<number>} lines written
  */
@@ -15,15 +15,15 @@ export async function pullAllLines(orc) {
   return lines.length;
 }
 
-/** `fob-orc lines pull` — write orchestrator line definitions to `.orchestrator/lines/`. */
+/** `al-orc lines pull` — write orchestrator line definitions to `.orchestrator/lines/`. */
 export async function pullLinesHandler(argv) {
   const { id, all } = argv;
 
   if (!id && !all) {
-    console.error('Usage: fob-orc lines pull <code|id>');
-    console.error('       fob-orc lines pull --all');
+    console.error('Usage: al-orc lines pull <code|id>');
+    console.error('       al-orc lines pull --all');
     console.error('');
-    console.error('Run "fob-orc lines list" to see available lines');
+    console.error('Run "al-orc lines list" to see available lines');
     process.exit(1);
   }
 

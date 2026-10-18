@@ -43,13 +43,13 @@ export async function pushAllLines(orc) {
   return totals;
 }
 
-/** `fob-orc lines push` — create/update orchestrator lines from local files. */
+/** `al-orc lines push` — create/update orchestrator lines from local files. */
 export async function pushLinesHandler(argv) {
   const { id, all } = argv;
 
   if (!id && !all) {
-    console.error('Usage: fob-orc lines push <filename|code|id>');
-    console.error('       fob-orc lines push --all');
+    console.error('Usage: al-orc lines push <filename|code|id>');
+    console.error('       al-orc lines push --all');
     process.exit(1);
   }
 
@@ -69,7 +69,7 @@ export async function pushLinesHandler(argv) {
 
   if (listAllLineFiles().length === 0) {
     console.log('No local lines found');
-    console.log('Run "fob-orc lines pull --all" first, or create a line file in .orchestrator/lines/');
+    console.log('Run "al-orc lines pull --all" first, or create a line file in .orchestrator/lines/');
     return;
   }
 

@@ -1,5 +1,5 @@
 /**
- * Subtree builder for `fob-orc supporting-docs <action>`.
+ * Subtree builder for `al-orc supporting-docs <action>`.
  */
 
 import { safe, localOptions } from '../_helpers.js';

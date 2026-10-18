@@ -3,11 +3,11 @@
  */
 
 import { resolveCredentials } from './config-store.js';
-import { fobOrc } from '../index.js';
+import { alOrc } from '../index.js';
 
 /**
  * Wrap a handler so unexpected exceptions exit cleanly without a stack trace.
- * Set FOB_DEBUG=1 to see the full stack.
+ * Set AL_DEBUG=1 to see the full stack.
  */
 export function safe(handler) {
   return async (argv) => {
@@ -15,7 +15,7 @@ export function safe(handler) {
       await handler(argv);
     } catch (err) {
       console.error(`Error: ${err.message}`);
-      if (process.env.FOB_DEBUG) console.error(err.stack);
+      if (process.env.AL_DEBUG) console.error(err.stack);
       process.exit(1);
     }
   };
@@ -46,7 +46,7 @@ let hintPrinted = false;
 /**
  * Resolve the current command's credentials from the CLI config, printing a
  * one-time hint to stderr about which identity is in use. Handlers pass the
- * returned object to fobOrc() as the `credentials`.
+ * returned object to alOrc() as the `credentials`.
  */
 export function requireCreds() {
   const creds = resolveCredentials();
@@ -58,10 +58,10 @@ export function requireCreds() {
 }
 
 /**
- * Build a credential-bound `fobOrc` client for the current command — the same
- * client workers construct, so a handler exercises the exact library path.
+ * Build a credential-bound `alOrc` client for the current command — the same
+ * client factories construct, so a handler exercises the exact library path.
  * Prints the one-time credential-source hint via requireCreds().
  */
 export function clientFor() {
-  return fobOrc(requireCreds());
+  return alOrc(requireCreds());
 }

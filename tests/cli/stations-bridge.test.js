@@ -24,8 +24,8 @@ function installFetch(calls) {
     let data;
     if (method === 'GET' && p === '/api/v1/lines') data = LINES;
     else if (method === 'PUT' && p.startsWith('/api/v1/lines/')) data = LINES.find((l) => p.endsWith(l.id));
-    else if (method === 'GET' && p === '/api/v1/processes') data = Object.values(REMOTE);
-    else if (method === 'GET' && p.startsWith('/api/v1/processes/')) data = REMOTE[p.split('/').pop()];
+    else if (method === 'GET' && p === '/api/v1/stations') data = Object.values(REMOTE);
+    else if (method === 'GET' && p.startsWith('/api/v1/stations/')) data = REMOTE[p.split('/').pop()];
     else if (method === 'GET' && p === '/api/v1/tags') data = [{ id: 't1', name: 'daily' }];
     else if (method === 'PUT' && p.endsWith('/tags')) data = [];
     else data = { id: p.split('/').pop() };
@@ -38,10 +38,10 @@ let pullStationsHandler, pushStationsHandler;
 
 beforeAll(async () => {
   const cfgDir = mkdtempSync(join(tmpdir(), 'orc-cfg-'));
-  process.env.FOB_ORC_CONFIG_DIR = cfgDir;
+  process.env.AL_ORC_CONFIG_DIR = cfgDir;
   writeFileSync(
     join(cfgDir, 'config.yml'),
-    'current_org: acme\norgs:\n  acme:\n    api_url: https://orchestrator.finopsbricks.com\n    api_key: k\n    api_secret: s\n',
+    'current_org: acme\norgs:\n  acme:\n    api_url: https://orchestrator.assemblyline.sh\n    api_key: k\n    api_secret: s\n',
   );
   const work = mkdtempSync(join(tmpdir(), 'orc-work-'));
   process.chdir(work);
@@ -71,13 +71,13 @@ describe('stations pull/push bridge', () => {
     installFetch(calls);
     await pushStationsHandler({ all: true });
 
-    const put1 = calls.find((c) => c.method === 'PUT' && c.path === '/api/v1/processes/p1');
+    const put1 = calls.find((c) => c.method === 'PUT' && c.path === '/api/v1/stations/p1');
     expect(put1.body.dependencies).toEqual(['p2']); // AP1 → p2
     expect(put1.body).not.toHaveProperty('id'); // stripped
     expect(put1.body).not.toHaveProperty('tags'); // stripped
     expect(put1.body.line).toBe('VM'); // line travels as its code; the server resolves it
 
-    const tagsPut = calls.find((c) => c.path === '/api/v1/processes/p1/tags');
+    const tagsPut = calls.find((c) => c.path === '/api/v1/stations/p1/tags');
     expect(tagsPut.body).toEqual({ tags: ['t1'] }); // name 'daily' → id 't1'
   });
 });

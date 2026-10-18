@@ -2,8 +2,7 @@
 /**
  * The `work-records` resource — every orchestrator work-record endpoint, once.
  *
- * The `station` filter is sent to the API as `?process=` (the API contract still
- * says "process"); callers pass `station` and this layer maps it.
+ * Callers filter by `station` (an id or a short_code), sent as `?station=`.
  */
 
 /**
@@ -29,7 +28,7 @@ const unwrap = (r) => r?.data ?? null;
 /** @param {string} s */
 const enc = (s) => encodeURIComponent(s);
 
-/** Map caller params → API search params (`station` → `process`).
+/** Map caller params → API search params.
  * `station` accepts an id or a short_code; the API resolves either. `line` is
  * passed through as-is and matches every station on that line.
  * @param {{ limit?: number, status?: string, station?: string, line?: string, tag?: string }} [params] */
@@ -38,7 +37,7 @@ function toSearchParams({ limit, status, station, line, tag } = {}) {
   const sp = {};
   if (limit) sp.limit = limit;
   if (status) sp.status = status;
-  if (station) sp.process = station;
+  if (station) sp.station = station;
   if (line) sp.line = line;
   if (tag) sp.tag = tag;
   return sp;

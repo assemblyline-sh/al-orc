@@ -1,7 +1,7 @@
 import { clientFor } from '../_helpers.js';
 import { formatTable } from '../utils/format.js';
 
-/** `fob-orc lines list` — lines from the orchestrator, with their station codes. */
+/** `al-orc lines list` — lines from the orchestrator, with their station codes. */
 export async function listLinesHandler(argv) {
   const { location, json, includeArchived } = argv || {};
 

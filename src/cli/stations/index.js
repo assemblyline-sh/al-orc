@@ -1,9 +1,9 @@
 /**
- * Subtree builder for `fob-orc stations <action>`.
+ * Subtree builder for `al-orc stations <action>`.
  *
  * Note: the orchestrator API/DB still says "process" — the paths carry that, but
  * the CLI vocabulary is "station". These are the CANONICAL definitions from the
- * orchestrator (contrast `fob-worker stations status`, which is local run-state).
+ * orchestrator (contrast `al-factory stations status`, which is local run-state).
  */
 
 import { safe, paginationOptions, localOptions } from '../_helpers.js';
@@ -46,7 +46,6 @@ export function buildStationsSubcommands(yargs) {
       (y) =>
         localOptions(y.positional('id', { describe: 'Station ID or short_code', type: 'string' }))
           .option('scenario', { describe: 'Apply a local station scenario (.orchestrator/scenarios/stations/<code>/)', type: 'string' })
-          .option('item', { describe: 'Item ID (legacy; item is being deprecated)', type: 'string' })
           .option('json', { describe: 'Output raw JSON', type: 'boolean' }),
       safe(runStationHandler),
     )

@@ -9,7 +9,7 @@ export async function currentConfigHandler(argv) {
   }
 
   if (!cur) {
-    console.log('(no active profile — run `fob-orc config profiles add <name>`)');
+    console.log('(no active profile — run `al-orc config profiles add <name>`)');
     return;
   }
 

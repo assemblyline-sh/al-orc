@@ -1,7 +1,7 @@
 import { clientFor } from '../_helpers.js';
 import { formatTable } from '../utils/format.js';
 
-/** `fob-orc tags list` — all tags. */
+/** `al-orc tags list` — all tags. */
 export async function listTagsHandler(argv) {
   const { json } = argv || {};
   const { data } = await clientFor().tags.list();

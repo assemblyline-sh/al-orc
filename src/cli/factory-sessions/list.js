@@ -4,15 +4,15 @@ import { formatTable, formatDate, localTzLabel } from '../utils/format.js';
 /**
  * Group active sessions by location and flag the ones that disagree.
  *
- * More than one worker at a location is legitimate scale-out on its own, but
+ * More than one factory session at a location is legitimate scale-out on its own, but
  * if they run different code or out of different directories they are not
  * interchangeable — and the orchestrator hands each task to whoever polls
- * first. That is the 2026-08-11 failure mode: two workers on `dev-laptop1`,
+ * first. That is the 2026-08-11 failure mode: two factory sessions on `dev-laptop1`,
  * one without the EM steps, so EM runs failed at random.
  *
- * D1 (one active session per org+location) now refuses the second worker, so
+ * D1 (one active session per org+location) now refuses the second session, so
  * this should be empty on a healthy fleet. It stays because historical rows
- * still show it, and because a refused worker is only refused at *session
+ * still show it, and because a refused session is only refused at *session
  * creation* — anything already active when D1 shipped kept running.
  *
  * @param {any[]} sessions
@@ -29,19 +29,19 @@ export function findLocationCollisions(sessions) {
   const collisions = [];
   for (const [location, group] of Object.entries(by_location)) {
     if (group.length < 2) continue;
-    const versions = [...new Set(group.map((s) => s.worker_version).filter(Boolean))];
+    const versions = [...new Set(group.map((s) => s.factory_version).filter(Boolean))];
     const cwds = [...new Set(group.map((s) => s.cwd).filter(Boolean))];
     collisions.push({ location, count: group.length, versions, cwds });
   }
   return collisions;
 }
 
-/** `fob-orc worker-sessions list` — worker processes the orchestrator knows about. */
-export async function listWorkerSessionsHandler(argv) {
+/** `al-orc factory-sessions list` — factory sessions the orchestrator knows about. */
+export async function listFactorySessionsHandler(argv) {
   const { limit, status, location, stale, json } = argv;
 
   const orc = clientFor();
-  const { data } = await orc.workerSessions.list({ limit, status, location });
+  const { data } = await orc.factorySessions.list({ limit, status, location });
   let sessions = data || [];
 
   // --stale is a client-side view over the same rows: anything not currently
@@ -56,16 +56,16 @@ export async function listWorkerSessionsHandler(argv) {
   }
 
   if (sessions.length === 0) {
-    console.log('No worker sessions found');
+    console.log('No factory sessions found');
     return;
   }
 
   const rows = sessions.map((s) => [
     s.id,
-    s.worker_name || '—',
+    s.factory_name || '—',
     s.hostname || '—',
     s.pid != null ? String(s.pid) : '—',
-    s.worker_version || '—',
+    s.factory_version || '—',
     s.status,
     String(s.tasks_completed ?? 0),
     String(s.tasks_failed ?? 0),
@@ -73,7 +73,7 @@ export async function listWorkerSessionsHandler(argv) {
   ]);
 
   console.log(formatTable(
-    ['SESSION', 'WORKER_NAME', 'HOST', 'PID', 'VER', 'STATUS', 'TASKS', 'FAIL', `LAST SEEN (${localTzLabel()})`],
+    ['SESSION', 'FACTORY_NAME', 'HOST', 'PID', 'VER', 'STATUS', 'TASKS', 'FAIL', `LAST SEEN (${localTzLabel()})`],
     rows,
   ));
   console.log('');
@@ -83,7 +83,7 @@ export async function listWorkerSessionsHandler(argv) {
     console.log('');
     console.log(`!  ${c.count} active sessions share location '${c.location}'`);
     if (c.versions.length > 1) {
-      console.log(`   Running different worker versions (${c.versions.join(', ')}).`);
+      console.log(`   Running different factory versions (${c.versions.join(', ')}).`);
       console.log('   Tasks go to whichever polls first — version skew fails nondeterministically.');
     } else if (c.cwds.length > 1) {
       console.log(`   Running from different directories (${c.cwds.join(', ')}).`);

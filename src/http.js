@@ -4,15 +4,11 @@
  *
  * PURE: credentials come from the `credentials` argument only — this module
  * never reads `process.env` or the CLI config file. Callers resolve creds their
- * own way (the CLI from its config profiles, workers from their own env) and
+ * own way (the CLI from its config profiles, factories from their own env) and
  * inject them.
  *
- * Base URL is origin-only (e.g. https://orchestrator.finopsbricks.com/); the
+ * Base URL is origin-only (e.g. https://orchestrator.assemblyline.sh/); the
  * /api/v1 prefix is carried in the paths passed by the resource layer.
- *
- * Note: the orchestrator HTTP API and database still use the term "process".
- * URL path strings (`/api/v1/processes/...`) keep that wording — it is the API
- * contract. Only the JS-side namespace/method names use "station".
  */
 
 /**
@@ -42,7 +38,7 @@ export class ApiError extends Error {
 }
 
 /** Origin the client talks to when the caller doesn't supply `api_url`. */
-export const DEFAULT_API_URL = 'https://orchestrator.finopsbricks.com';
+export const DEFAULT_API_URL = 'https://orchestrator.assemblyline.sh';
 
 /**
  * Resolve credentials from the explicit argument only — this module never reads
@@ -58,7 +54,7 @@ function resolveCreds(credentials) {
   const api_secret = credentials?.api_secret;
   if (!api_key || !api_secret) {
     throw new ApiError(
-      'Missing orchestrator credentials: pass { api_key, api_secret } to fobOrc() ' +
+      'Missing orchestrator credentials: pass { api_key, api_secret } to alOrc() ' +
         `(api_url optional, defaults to ${DEFAULT_API_URL}).`,
       { code: 'NO_CREDENTIALS' },
     );
@@ -239,7 +235,7 @@ export async function apiGetAll(path, options = {}, { maxRows = MAX_ALL_ROWS, pa
 /**
  * Bind credentials once and return a transport whose methods no longer take a
  * `credentials` argument. This is the seam the resource layer builds on: the
- * `fobOrc(credentials)` factory calls this, then hands the resulting `ctx` to
+ * `alOrc(credentials)` factory calls this, then hands the resulting `ctx` to
  * each `buildX(ctx)` so action files stay credential-free and pure.
  *
  * @param {Credentials} [credentials]

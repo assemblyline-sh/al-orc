@@ -1,7 +1,7 @@
 /**
- * Subtree builder for `fob-orc lines <action>`.
+ * Subtree builder for `al-orc lines <action>`.
  *
- * A line is a sequence of stations that runs at exactly one worker location.
+ * A line is a sequence of stations that runs at exactly one location.
  * The line owns `location`; stations name their line by `code` and inherit it.
  * Local files: `.orchestrator/lines/<CODE>.json`.
  */
@@ -21,7 +21,7 @@ export function buildLinesSubcommands(yargs) {
       'List lines from the orchestrator',
       (y) =>
         paginationOptions(y)
-          .option('location', { describe: 'Only lines served by this worker location', type: 'string' })
+          .option('location', { describe: 'Only lines served by this location', type: 'string' })
           .option('include-archived', { describe: 'Include archived lines', type: 'boolean' }),
       safe(listLinesHandler),
     )

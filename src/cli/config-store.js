@@ -1,13 +1,13 @@
 /**
- * CLI credential store — reads/writes ~/.fob/fob-orc/config.yml (mode 0600) and
+ * CLI credential store — reads/writes ~/.assemblyline/al-orc/config.yml (mode 0600) and
  * resolves which credentials the current command uses.
  *
- * Config lives under the shared family root ~/.fob/ so every fob-<tool> wrapper
+ * Config lives under the shared family root ~/.assemblyline/ so every al-<tool>
  * keeps its config in one place. Path is home-dir based (os.homedir()) for
- * multi-OS support; not XDG. Override the whole dir with FOB_ORC_CONFIG_DIR.
+ * multi-OS support; not XDG. Override the whole dir with AL_ORC_CONFIG_DIR.
  *
  * CLI-only: the importable client (src/index.js) never imports this. CLI
- * handlers call resolveCredentials() and pass the result to fobOrc() as the
+ * handlers call resolveCredentials() and pass the result to alOrc() as the
  * `credentials`. Single tool, per-org (no per-app nesting).
  */
 
@@ -16,7 +16,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 import yaml from 'js-yaml';
 
-const CONFIG_DIR = process.env.FOB_ORC_CONFIG_DIR || join(homedir(), '.fob', 'fob-orc');
+const CONFIG_DIR = process.env.AL_ORC_CONFIG_DIR || join(homedir(), '.assemblyline', 'al-orc');
 const CONFIG_PATH = join(CONFIG_DIR, 'config.yml');
 
 let orgOverride = null;
@@ -58,7 +58,7 @@ export function removeOrg(name) {
 
 export function useOrg(name) {
   const cfg = loadConfig();
-  if (!cfg.orgs[name]) throw new Error(`No profile named '${name}'. Run \`fob-orc config profiles add ${name}\`.`);
+  if (!cfg.orgs[name]) throw new Error(`No profile named '${name}'. Run \`al-orc config profiles add ${name}\`.`);
   cfg.current_org = name;
   saveConfig(cfg);
   return cfg;
@@ -96,7 +96,7 @@ export function resolveCredentials() {
 
   if (orgOverride) {
     const org = cfg.orgs[orgOverride];
-    if (!org) throw new Error(`Profile '${orgOverride}' is not configured. Run \`fob-orc config profiles add ${orgOverride}\`.`);
+    if (!org) throw new Error(`Profile '${orgOverride}' is not configured. Run \`al-orc config profiles add ${orgOverride}\`.`);
     return { ...org, name: orgOverride, source: `profile '${orgOverride}'` };
   }
 
@@ -105,7 +105,7 @@ export function resolveCredentials() {
   }
 
   throw new Error(
-    'No orchestrator profile selected. Run `fob-orc config profiles add <name>`, then `fob-orc config profiles use <name>` (or pass --profile <name>).',
+    'No orchestrator profile selected. Run `al-orc config profiles add <name>`, then `al-orc config profiles use <name>` (or pass --profile <name>).',
   );
 }
 

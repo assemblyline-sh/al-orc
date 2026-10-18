@@ -148,16 +148,16 @@ async function pushByFilename(orc, cache, filename, { force = false } = {}) {
   }
 }
 
-/** `fob-orc stations push` — create/update orchestrator stations from local files. */
+/** `al-orc stations push` — create/update orchestrator stations from local files. */
 export async function pushStationsHandler(argv) {
   const { id, all, force } = argv;
 
   if (!id && !all) {
-    console.error('Usage: fob-orc stations push <filename>      (create or update based on content)');
-    console.error('       fob-orc stations push <id|short_code>  (update by station ID or short_code)');
-    console.error('       fob-orc stations push --all');
+    console.error('Usage: al-orc stations push <filename>      (create or update based on content)');
+    console.error('       al-orc stations push <id|short_code>  (update by station ID or short_code)');
+    console.error('       al-orc stations push --all');
     console.error('');
-    console.error('Run "fob-orc stations list" to see available stations');
+    console.error('Run "al-orc stations list" to see available stations');
     process.exit(1);
   }
 
@@ -191,7 +191,7 @@ export async function pushStationsHandler(argv) {
   const allPaths = listAllStationFiles();
   if (allPaths.length === 0) {
     console.log('No local stations found');
-    console.log('Run "fob-orc stations pull --all" first, or create a new station file');
+    console.log('Run "al-orc stations pull --all" first, or create a new station file');
     return;
   }
 

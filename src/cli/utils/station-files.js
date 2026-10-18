@@ -6,8 +6,8 @@
  * Station scenarios in:   .orchestrator/scenarios/stations/<short_code>/<name>.json
  *
  * Line membership is encoded by the `line` field inside each JSON, not by folder
- * hierarchy. (Ported from cli-fob for the fob-orc pull/push/run bridges; the
- * step-scenario + local run-state helpers stay in fob-worker.)
+ * hierarchy. (Ported from cli-fob for the al-orc pull/push/run bridges; the
+ * step-scenario + local run-state helpers stay in al-factory.)
  */
 
 import fs from 'node:fs';
