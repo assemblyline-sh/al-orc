@@ -1,6 +1,6 @@
 {
   "name": "@assemblyline/al-orc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Assembly Line Orchestrator client + al-orc CLI (2-in-1): push lines and stations, run them, read work records.",
   "repository": {
     "type": "git",

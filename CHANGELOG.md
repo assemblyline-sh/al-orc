@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-19
+
+### Fixed
+- `config profiles add` no longer requires `--api-url`; it defaults to
+  `https://orchestrator.assemblyline.sh`, as the README's quick start assumes.
+
 ## [0.1.0] - 2026-10-19
 
 First release as `@assemblyline/al-orc`, forked from `@finopsbricks/fob-orc` 0.2.0. Entries

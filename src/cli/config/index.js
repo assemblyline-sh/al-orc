@@ -1,4 +1,5 @@
 import { safe, localOptions } from '../_helpers.js';
+import { DEFAULT_API_URL } from '../../http.js';
 import { addConfigHandler } from './add.js';
 import { listConfigHandler } from './list.js';
 import { useConfigHandler } from './use.js';
@@ -30,7 +31,7 @@ function buildProfilesSubcommands(yargs) {
       "Add or update a profile's orchestrator credentials",
       (y) =>
         localOptions(y.positional('name', { describe: 'Profile name', type: 'string' }))
-          .option('api-url', { describe: 'API base URL (origin only)', type: 'string', demandOption: true })
+          .option('api-url', { describe: 'API base URL (origin only)', type: 'string', default: DEFAULT_API_URL })
           .option('api-key', { describe: 'API key', type: 'string', demandOption: true })
           .option('api-secret', { describe: 'API secret', type: 'string', demandOption: true }),
       safe(addConfigHandler),
