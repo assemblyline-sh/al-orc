@@ -1,9 +1,8 @@
+// @ts-check
 /**
  * Subtree builder for `al-orc stations <action>`.
  *
- * Note: the orchestrator API/DB still says "process" — the paths carry that, but
- * the CLI vocabulary is "station". These are the CANONICAL definitions from the
- * orchestrator (contrast `al-control stations status`, which reads the bins).
+ * These are the CANONICAL definitions from the orchestrator (contrast `al-control stations status`, which reads the bins).
  */
 
 import { safe, paginationOptions, localOptions } from '../_helpers.js';
@@ -46,7 +45,9 @@ export function buildStationsSubcommands(yargs) {
       (y) =>
         localOptions(y.positional('id', { describe: 'Station ID or short_code', type: 'string' }))
           .option('scenario', { describe: 'Apply a local station scenario (.orchestrator/scenarios/stations/<code>/)', type: 'string' })
-          .option('json', { describe: 'Output raw JSON', type: 'boolean' }),
+          .option('json', { describe: 'Output raw JSON', type: 'boolean' })
+          // Any other --key=value is a step override, so unknown flags are the point here.
+          .strict(false),
       safe(runStationHandler),
     )
     .command(
@@ -97,7 +98,7 @@ export function buildStationsSubcommands(yargs) {
       'Permanently delete a station',
       (y) =>
         localOptions(y.positional('id', { describe: 'Station ID', type: 'string' }))
-          .option('cascade', { describe: 'Also delete linked work records (server support pending)', type: 'boolean' }),
+          .option('cascade', { describe: 'Also delete its work records (otherwise refused while any exist)', type: 'boolean' }),
       safe(deleteStationHandler),
     )
     .demandCommand(1, 'Specify an action: list, show, run, edit, pull, push, archive, unarchive, delete');

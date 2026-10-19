@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Shared formatting helpers for CLI output.
  * Structured text readable by both humans and LLMs.
@@ -42,42 +43,6 @@ export function formatTable(headers, rows, options = {}) {
 }
 
 /**
- * Format rows as RFC-4180 CSV.
- * Cells containing commas, quotes, or newlines are double-quoted, and embedded
- * quotes are doubled. `null` / `undefined` become empty.
- */
-export function formatCsv(headers, rows) {
-  const escape = (value) => {
-    if (value == null) return '';
-    const s = String(value);
-    return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-  };
-  const lines = [headers.map(escape).join(',')];
-  for (const row of rows) lines.push(row.map(escape).join(','));
-  return lines.join('\r\n');
-}
-
-/**
- * Format a decimal currency value with thousands separators and 2 decimals.
- * Returns '' for null / undefined / 0.
- */
-export function formatCurrency(value) {
-  if (value == null || value === '' || Number(value) === 0) return '';
-  return Number(value).toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-}
-
-/**
- * Format a monetary value stored as integer milli-units (× 1000).
- */
-export function formatAmount(milliUnits) {
-  if (milliUnits == null || milliUnits === '' || Number(milliUnits) === 0) return '';
-  return formatCurrency(Number(milliUnits) / 1000);
-}
-
-/**
  * Format a byte count as a human-readable size. Returns '' for null/undefined.
  * "812 B", "1.5 KB", "3.2 MB".
  */
@@ -96,7 +61,7 @@ export function formatBytes(bytes) {
  */
 export function formatDuration(start, end) {
   if (!start || !end) return '—';
-  const ms = new Date(end) - new Date(start);
+  const ms = new Date(end).getTime() - new Date(start).getTime();
   if (ms < 0) return '—';
   const seconds = Math.floor(ms / 1000);
   if (seconds < 60) return `${seconds}s`;

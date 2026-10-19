@@ -44,9 +44,9 @@ export const DEFAULT_API_URL = 'https://orchestrator.assemblyline.sh';
  * Resolve credentials from the explicit argument only — this module never reads
  * `process.env`. Callers
  * pass `{ api_key, api_secret }` (required) and optionally `api_url` (defaults to
- * the hosted origin) and `location` (sent as `X-Location`).
+ * the hosted origin).
  * @param {Credentials} credentials
- * @returns {{ api_url: string, api_key: string, api_secret: string, location?: string }}
+ * @returns {{ api_url: string, api_key: string, api_secret: string }}
  */
 function resolveCreds(credentials) {
   const api_url = credentials?.api_url ?? DEFAULT_API_URL;
@@ -59,10 +59,10 @@ function resolveCreds(credentials) {
       { code: 'NO_CREDENTIALS' },
     );
   }
-  return { api_url, api_key, api_secret, location: credentials?.location };
+  return { api_url, api_key, api_secret };
 }
 
-/** @param {{ api_key: string, api_secret: string, location?: string }} creds */
+/** @param {{ api_key: string, api_secret: string }} creds */
 function authHeaders(creds) {
   /** @type {Record<string, string>} */
   const headers = {
@@ -70,7 +70,6 @@ function authHeaders(creds) {
     'api-secret': creds.api_secret,
     accept: 'application/json',
   };
-  if (creds.location) headers['X-Location'] = creds.location;
   return headers;
 }
 

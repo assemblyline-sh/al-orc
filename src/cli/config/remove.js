@@ -1,3 +1,4 @@
+// @ts-check
 import { removeOrg } from '../config-store.js';
 
 export async function removeConfigHandler(argv) {

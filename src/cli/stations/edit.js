@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 import { editEntityTags } from '../shared/edit-tags.js';
 

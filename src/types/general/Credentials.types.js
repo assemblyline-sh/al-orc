@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Orchestrator API credentials, passed explicitly to `alOrc(...)`. The library
  * never reads these from the environment — the caller injects them.
@@ -5,7 +6,6 @@
  * @property {string} api_key
  * @property {string} api_secret
  * @property {string} [api_url]  Origin-only base URL (no /api/v1). Defaults to https://orchestrator.assemblyline.sh.
- * @property {string} [location]  Optional location, sent as `X-Location`.
  */
 
 /**

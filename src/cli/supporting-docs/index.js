@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Subtree builder for `al-orc supporting-docs <action>`.
  */

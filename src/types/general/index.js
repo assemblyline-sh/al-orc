@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * General/shared types — the credential + transport plumbing.
  * @typedef {import('./Credentials.types.js').Credentials} Credentials

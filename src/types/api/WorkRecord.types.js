@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * A work record — one run of a station, as returned by
  * `/api/v1/work-records`.
@@ -10,6 +11,12 @@
  * @property {Record<string, any>[]} [step_outputs]
  * @property {string} [created_at]
  * @property {string} [updated_at]
+ * @property {string|null} [started_at]
+ * @property {string|null} [completed_at]
+ * @property {string|null} [performed_by]  Who or what ran it (a factory session, or a user).
+ * @property {string|null} [error]
+ * @property {WorkRecordActivity[]} [activity]  With `show --activity`.
+ * @property {import('./SupportingDoc.types.js').SupportingDoc[]} [supporting_docs]  With `show --supporting-docs`.
  */
 
 /**

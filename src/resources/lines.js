@@ -17,7 +17,7 @@
 
 /**
  * @typedef {Object} LinesApi
- * @property {(params?: { location?: string, include_archived?: boolean }) => Promise<{ data: Line[], page_context: object|null }>} list
+ * @property {(params?: { location?: string, include_archived?: boolean, page?: number, limit?: number }) => Promise<{ data: Line[], page_context: object|null }>} list
  * @property {(params?: { location?: string, include_archived?: boolean }) => Promise<Line[]>} getAll
  * @property {(id: string) => Promise<Line|null>} get
  * @property {(data: object) => Promise<Line|null>} create

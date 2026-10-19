@@ -1,3 +1,4 @@
+// @ts-check
 import { writeFileSync } from 'node:fs';
 import { clientFor } from '../_helpers.js';
 import { formatHeader, formatField, formatBytes, formatDate } from '../utils/format.js';

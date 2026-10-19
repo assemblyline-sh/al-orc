@@ -1,3 +1,4 @@
+// @ts-check
 import { listProfiles } from '../config-store.js';
 import { formatTable } from '../utils/format.js';
 

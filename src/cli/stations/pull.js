@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 import { saveStation, getStationsDir } from '../utils/station-files.js';
 import { pullAllLines } from '../lines/pull.js';

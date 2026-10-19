@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from './_helpers.js';
 
 /** `al-orc status` — probe connectivity to the orchestrator with the active profile. */

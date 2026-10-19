@@ -1,13 +1,14 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 import { formatTable, formatDate, formatDuration, localTzLabel, formatPaginationHint, truncate } from '../utils/format.js';
 import { buildStationLabelMap, stationLabel } from '../utils/station-labels.js';
 
 /** `al-orc work-records list` — work records from the orchestrator, filterable. */
 export async function listWorkRecordsHandler(argv) {
-  const { limit, status, station, line, tag, json } = argv;
+  const { page, limit, status, station, line, tag, json } = argv;
 
   const orc = clientFor();
-  const { data, page_context } = await orc.workRecords.list({ limit, status, station, line, tag });
+  const { data, page_context } = await orc.workRecords.list({ page, limit, status, station, line, tag });
   const records = data || [];
 
   if (json) {

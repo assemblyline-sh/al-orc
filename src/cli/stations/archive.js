@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 
 /** `al-orc stations archive <id>` — hide from default list, preserve history, block execution. */

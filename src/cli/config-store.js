@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * CLI credential store — reads/writes ~/.assemblyline/al-orc/config.yml (mode 0600) and
  * resolves which credentials the current command uses.
@@ -89,7 +90,7 @@ export function listProfiles() {
  * Precedence: `--profile`/`--org` override > config `current_org`. The CLI's
  * credential model is profiles (config.yml); it does not read env — an env var
  * that silently overrode the active profile would be a footgun.
- * @returns {{ api_url: string, api_key: string, api_secret: string, source: string }}
+ * @returns {{ api_url: string, api_key: string, api_secret: string, name: string, source: string }}
  */
 export function resolveCredentials() {
   const cfg = loadConfig();

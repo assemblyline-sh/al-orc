@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 import { formatHeader, formatField, formatTable, formatSection } from '../utils/format.js';
 

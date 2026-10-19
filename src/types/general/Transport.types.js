@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * @typedef {import('./Credentials.types.js').Credentials} Credentials
  * @typedef {import('./Credentials.types.js').RequestOptions} RequestOptions

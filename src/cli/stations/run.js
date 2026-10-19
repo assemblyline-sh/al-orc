@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 import { loadStation, loadStationScenario, listStationScenarios } from '../utils/station-files.js';
 
@@ -12,7 +13,7 @@ const COMMAND_KEYS = new Set(['id', 'scenario', 'json']);
  * reserved/known key becomes a per-run override, shallow-merged into every
  * step's config server-side.
  */
-function buildStepOverrides(argv, station) {
+export function buildStepOverrides(argv, station) {
   const overrides = {};
   const fromScenario = [];
   const fromCli = [];
@@ -33,11 +34,17 @@ function buildStepOverrides(argv, station) {
     }
   }
 
+  // yargs adds a camelCase copy of every kebab-case flag (--max-files → maxFiles).
+  // Step configs are snake_case, so a kebab flag becomes max_files and its
+  // camelCase copy is dropped.
+  const camel_copies = new Set(
+    Object.keys(argv).filter((k) => k.includes('-')).map((k) => k.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase())),
+  );
   for (const [k, v] of Object.entries(argv)) {
-    if (YARGS_KEYS.has(k) || COMMAND_KEYS.has(k)) continue;
-    if (k.includes('-')) continue; // skip kebab dupes; underscore form is canonical
-    overrides[k] = v;
-    fromCli.push(k);
+    if (YARGS_KEYS.has(k) || COMMAND_KEYS.has(k) || camel_copies.has(k)) continue;
+    const key = k.replace(/-/g, '_');
+    overrides[key] = v;
+    fromCli.push(key);
   }
 
   return { overrides, fromScenario, fromCli };

@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * A line, as returned by `/api/v1/lines`. A sequence of stations that runs at
  * exactly one location; the line owns `location`, stations inherit it.

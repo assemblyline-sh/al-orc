@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Shared --add-tag / --remove-tag flow for taggable entities (stations,
  * work-records). Works against a resource namespace that exposes getTags/setTags

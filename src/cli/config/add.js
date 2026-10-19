@@ -1,3 +1,4 @@
+// @ts-check
 import { addOrg } from '../config-store.js';
 
 export async function addConfigHandler(argv) {

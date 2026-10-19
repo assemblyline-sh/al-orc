@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 import { formatTable, formatDate, formatField, formatSection, localTzLabel, truncate } from '../utils/format.js';
 

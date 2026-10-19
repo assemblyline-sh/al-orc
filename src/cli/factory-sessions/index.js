@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Subtree builder for `al-orc factory-sessions <action>`.
  */

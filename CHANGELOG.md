@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-19
+
+### Fixed
+- `stations run <id> --key=value` passes extra flags as step overrides again; strict
+  argument checking rejected them (broken since fob-orc 2026-07-26). Kebab-case flags become
+  snake_case keys (`--max-files=3` → `max_files`), and yargs' camelCase copies are no longer
+  sent. Every other command still rejects unknown flags.
+- `work-records list --page <n>` works, as its "use --page" hint says.
+- `lines list` and `stations list` honour `--page` and `--limit` instead of always returning the
+  first 100, and print the same next-page hint.
+
+### Removed
+- **BREAKING (library):** the `location` credential and its `X-Location` header. Only the
+  factory protocol (`/api/factory/*`) reads it, and al-orc never calls that.
+- `formatCsv`, `formatCurrency` and `formatAmount` from `format.js`, unused since the fork.
+
+### Changed
+- Every source file is `// @ts-check`ed, and the API types now cover the fields the CLI reads
+  (work-record timings and errors, supporting-document metadata, tag usage).
+- `stations delete --cascade` and the code no longer say server support is pending; the
+  orchestrator supports it.
+
 ## [0.1.1] - 2026-10-19
 
 ### Fixed

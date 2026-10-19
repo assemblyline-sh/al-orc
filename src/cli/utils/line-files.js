@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Local line file cache — `.orchestrator/lines/<CODE>.json`, one per line.
  *

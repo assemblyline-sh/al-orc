@@ -19,7 +19,7 @@
  * The station client surface. Explicit (not inferred) so callers get real
  * checking; `buildStations`'s `@returns` binds it, so `tsc` verifies the impl.
  * @typedef {Object} StationsApi
- * @property {(params?: { tag?: string, line?: string, include_archived?: boolean }) => Promise<{ data: Station[], page_context: object|null }>} list
+ * @property {(params?: { tag?: string, line?: string, include_archived?: boolean, page?: number, limit?: number }) => Promise<{ data: Station[], page_context: object|null }>} list
  * @property {(params?: { tag?: string, line?: string, include_archived?: boolean }) => Promise<Station[]>} getAll
  * @property {(id: string) => Promise<Station|null>} get
  * @property {(data: object) => Promise<Station|null>} create
@@ -61,7 +61,7 @@ export function buildStations(ctx) {
     /** Update station fields (PUT). Returns the updated record. */
     update: (id, data) => ctx.put(`/api/v1/stations/${enc(id)}`, data).then(unwrap),
 
-    /** Delete a station. `cascade` also removes linked work records (server support pending). */
+    /** Delete a station. Refused while it has work records, unless `cascade` (which deletes them too). */
     delete: (id, { cascade } = {}) =>
       ctx.delete(`/api/v1/stations/${enc(id)}`, cascade ? { searchParams: { cascade: true } } : undefined).then(unwrap),
 

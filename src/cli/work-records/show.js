@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 import { formatHeader, formatField, formatTable, formatSection, formatDate, formatDuration, localTzLabel } from '../utils/format.js';
 import { buildStationLabelMap, stationLabel } from '../utils/station-labels.js';

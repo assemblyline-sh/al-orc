@@ -14,7 +14,7 @@
 
 /**
  * @typedef {Object} WorkRecordsApi
- * @property {(params?: { limit?: number, status?: string, station?: string, line?: string, tag?: string }) => Promise<{ data: WorkRecord[], page_context: object|null }>} list
+ * @property {(params?: { page?: number, limit?: number, status?: string, station?: string, line?: string, tag?: string }) => Promise<{ data: WorkRecord[], page_context: object|null }>} list
  * @property {(params?: { status?: string, station?: string, line?: string, tag?: string }) => Promise<WorkRecord[]>} getAll
  * @property {(id: string, opts?: { include?: string[] }) => Promise<WorkRecord|null>} get
  * @property {(id: string) => Promise<WorkRecordActivity[]>} activity
@@ -31,10 +31,11 @@ const enc = (s) => encodeURIComponent(s);
 /** Map caller params → API search params.
  * `station` accepts an id or a short_code; the API resolves either. `line` is
  * passed through as-is and matches every station on that line.
- * @param {{ limit?: number, status?: string, station?: string, line?: string, tag?: string }} [params] */
-function toSearchParams({ limit, status, station, line, tag } = {}) {
+ * @param {{ page?: number, limit?: number, status?: string, station?: string, line?: string, tag?: string }} [params] */
+function toSearchParams({ page, limit, status, station, line, tag } = {}) {
   /** @type {Record<string, any>} */
   const sp = {};
+  if (page) sp.page = page;
   if (limit) sp.limit = limit;
   if (status) sp.status = status;
   if (station) sp.station = station;

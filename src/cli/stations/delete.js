@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 
 /** `al-orc stations delete <id>` — permanently delete a station. */

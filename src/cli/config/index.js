@@ -1,3 +1,4 @@
+// @ts-check
 import { safe, localOptions } from '../_helpers.js';
 import { DEFAULT_API_URL } from '../../http.js';
 import { addConfigHandler } from './add.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 import { listAllLineFiles, loadLineByFilename, findLineFile, saveLine, getLinesDir } from '../utils/line-files.js';
 

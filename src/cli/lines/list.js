@@ -1,12 +1,13 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
-import { formatTable } from '../utils/format.js';
+import { formatTable, formatPaginationHint } from '../utils/format.js';
 
 /** `al-orc lines list` — lines from the orchestrator, with their station codes. */
 export async function listLinesHandler(argv) {
-  const { location, json, includeArchived } = argv || {};
+  const { location, json, includeArchived, page, limit } = argv || {};
 
   const orc = clientFor();
-  const { data } = await orc.lines.list({ location, include_archived: includeArchived });
+  const { data, page_context } = await orc.lines.list({ location, include_archived: includeArchived, page, limit });
   const lines = data || [];
 
   if (json) {
@@ -33,4 +34,7 @@ export async function listLinesHandler(argv) {
   console.log('');
   const station_total = lines.reduce((n, l) => n + (l.stations?.length ?? 0), 0);
   console.log(`Total: ${lines.length} lines, ${station_total} stations`);
+
+  const hint = formatPaginationHint(page_context);
+  if (hint) console.log(hint);
 }

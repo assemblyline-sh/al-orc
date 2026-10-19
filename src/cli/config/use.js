@@ -1,3 +1,4 @@
+// @ts-check
 import { useOrg } from '../config-store.js';
 
 export async function useConfigHandler(argv) {

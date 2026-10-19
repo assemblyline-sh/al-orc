@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Station id → short_code labelling for commands that only get an id back.
  *

@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Local station + station-scenario file cache — the bridge between the
  * orchestrator (remote truth) and the working tree.

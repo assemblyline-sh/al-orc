@@ -59,8 +59,8 @@ import { buildFactorySessions } from './resources/factory-sessions.js';
 
 /**
  * @param {Credentials} credentials  Required: `{ api_key, api_secret }`. Optional
- *   `api_url` (origin-only) overrides the default hosted endpoint; optional
- *   `location` is sent as `X-Location`. The library never reads these from the
+ *   `api_url` (origin-only) overrides the default hosted endpoint. The library
+ *   never reads these from the
  *   environment — inject them explicitly.
  * @returns {OrcClient}
  */

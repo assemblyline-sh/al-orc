@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Subtree builder for `al-orc work-records <action>`.
  */
@@ -17,6 +18,7 @@ export function buildWorkRecordsSubcommands(yargs) {
       'List work records',
       (y) =>
         localOptions(y)
+          .option('page', { describe: 'Page number', type: 'number' })
           .option('limit', { describe: 'Max records', type: 'number' })
           .option('status', { describe: 'Filter by status', type: 'string' })
           .option('station', { describe: 'Filter by station ID or short_code (e.g. EM0)', type: 'string' })

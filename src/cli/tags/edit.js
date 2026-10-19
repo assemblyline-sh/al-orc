@@ -1,3 +1,4 @@
+// @ts-check
 import { clientFor } from '../_helpers.js';
 
 /** `al-orc tags edit <id>` — update a tag's fields. */
