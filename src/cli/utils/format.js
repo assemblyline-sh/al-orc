@@ -146,7 +146,7 @@ export function localTzLabel() {
  * print `toISOString()` verbatim — so an operator in IST read every timestamp
  * 5.5 hours early with nothing on screen saying so. That quietly breaks the
  * main thing these timestamps are for: correlating against `pm2 logs`, file
- * mtimes and `al-factory` output, all of which are local.
+ * mtimes and `al-control` output, all of which are local.
  *
  * Pair with `localTzLabel()` in the surrounding header so the zone is stated
  * once. sv-SE is used because its locale format is already `YYYY-MM-DD HH:MM:SS`.

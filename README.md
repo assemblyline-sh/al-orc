@@ -56,11 +56,11 @@ call it, so they can't drift.
 Every command's terminal output follows these. They were implicit for a long time and drifted —
 `format.js` is copy-pasted across six sibling CLIs and each copy diverged — so they are written down
 here and covered by `tests/cli/format.test.js`. Use the `src/cli/utils/format.js` helpers rather than
-formatting inline; that is what keeps `al-orc` and `al-factory` agreeing.
+formatting inline; that is what keeps `al-orc` and `al-control` agreeing.
 
 **Timestamps** — always `formatDate()`, never `toISOString()` or a raw `Date`. Output is the
 operator's **local** timezone, because everything these get compared against (`pm2 logs`, file mtimes,
-`al-factory` output) is local. The orchestrator returns UTC, so printing it verbatim silently misread
+`al-control` output) is local. The orchestrator returns UTC, so printing it verbatim silently misread
 every timestamp by the local offset. Name the zone **once** per table or block via `localTzLabel()` in
 the column header — `CREATED (${localTzLabel()})` — never per row. Durations use `formatDuration()`.
 

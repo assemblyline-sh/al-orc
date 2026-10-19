@@ -7,7 +7,7 @@
  *
  * Line membership is encoded by the `line` field inside each JSON, not by folder
  * hierarchy. (Ported from cli-fob for the al-orc pull/push/run bridges; the
- * step-scenario + local run-state helpers stay in al-factory.)
+ * step scenarios live in lib-factory's `factory` command.)
  */
 
 import fs from 'node:fs';

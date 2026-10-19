@@ -3,7 +3,7 @@
  *
  * Note: the orchestrator API/DB still says "process" — the paths carry that, but
  * the CLI vocabulary is "station". These are the CANONICAL definitions from the
- * orchestrator (contrast `al-factory stations status`, which is local run-state).
+ * orchestrator (contrast `al-control stations status`, which reads the bins).
  */
 
 import { safe, paginationOptions, localOptions } from '../_helpers.js';

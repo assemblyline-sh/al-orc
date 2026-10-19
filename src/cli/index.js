@@ -5,8 +5,8 @@
  *
  * The orchestrator control plane (canonical station/process definitions, work
  * records, tags, supporting docs). Credentials come from ~/.assemblyline/al-orc/config.yml;
- * `config` manages them. (Local run-state / pm2 / step execution live in the
- * sibling `al-factory` CLI, not here.)
+ * `config` manages them. (Bins and pm2 live in `al-control`; running a step
+ * is lib-factory's `factory` command. Not here.)
  */
 
 import yargs from 'yargs';
