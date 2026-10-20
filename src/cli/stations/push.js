@@ -199,9 +199,9 @@ export async function pushStationsHandler(argv) {
   let updatedCount = 0;
   let createdCount = 0;
   for (const filepath of allPaths) {
-    const hadId = !!loadStationByFilename(filepath).id;
+    const has_id =!!loadStationByFilename(filepath).id;
     await pushByFilename(orc, cache, filepath, { force });
-    if (hadId) updatedCount++;
+    if (has_id)updatedCount++;
     else createdCount++;
   }
 

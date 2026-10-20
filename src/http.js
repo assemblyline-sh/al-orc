@@ -207,7 +207,7 @@ export async function apiGetAll(path, options = {}, { maxRows = MAX_ALL_ROWS, pa
   const all = [];
   let page = 1;
   let pageContext = null;
-  let truncated = false;
+  let is_truncated = false;
 
   while (true) {
     const result = await apiGet(path, {
@@ -219,7 +219,7 @@ export async function apiGetAll(path, options = {}, { maxRows = MAX_ALL_ROWS, pa
 
     if (all.length + rows.length > maxRows) {
       all.push(...rows.slice(0, maxRows - all.length));
-      truncated = true;
+      is_truncated = true;
       break;
     }
     all.push(...rows);
@@ -228,7 +228,7 @@ export async function apiGetAll(path, options = {}, { maxRows = MAX_ALL_ROWS, pa
     page++;
   }
 
-  return { data: all, page_context: pageContext, truncated };
+  return { data: all, page_context: pageContext, truncated: is_truncated };
 }
 
 /**
