@@ -42,7 +42,7 @@ export function paginationOptions(yargs) {
 }
 
 // Print the credential-source hint at most once per invocation.
-let hintPrinted = false;
+let hint_printed = false;
 
 /**
  * Resolve the current command's credentials from the CLI config, printing a
@@ -51,9 +51,9 @@ let hintPrinted = false;
  */
 export function requireCreds() {
   const creds = resolveCredentials();
-  if (!hintPrinted) {
+  if (!hint_printed) {
     console.error(`(using orchestrator credentials from ${creds.source})`);
-    hintPrinted = true;
+    hint_printed = true;
   }
   return creds;
 }

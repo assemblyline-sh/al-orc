@@ -20,11 +20,11 @@ import yaml from 'js-yaml';
 const CONFIG_DIR = process.env.AL_ORC_CONFIG_DIR || join(homedir(), '.assemblyline', 'al-orc');
 const CONFIG_PATH = join(CONFIG_DIR, 'config.yml');
 
-let orgOverride = null;
+let org_override = null;
 
 /** Set by the `--profile <name>` global flag (alias `--org`; yargs middleware). Beats current_org. */
 export function setOrgOverride(name) {
-  orgOverride = name;
+  org_override = name;
 }
 
 export function loadConfig() {
@@ -95,10 +95,10 @@ export function listProfiles() {
 export function resolveCredentials() {
   const cfg = loadConfig();
 
-  if (orgOverride) {
-    const org = cfg.orgs[orgOverride];
-    if (!org) throw new Error(`Profile '${orgOverride}' is not configured. Run \`al-orc config profiles add ${orgOverride}\`.`);
-    return { ...org, name: orgOverride, source: `profile '${orgOverride}'` };
+  if (org_override) {
+    const org = cfg.orgs[org_override];
+    if (!org) throw new Error(`Profile '${org_override}' is not configured. Run \`al-orc config profiles add ${org_override}\`.`);
+    return { ...org, name: org_override, source: `profile '${org_override}'` };
   }
 
   if (cfg.current_org && cfg.orgs[cfg.current_org]) {

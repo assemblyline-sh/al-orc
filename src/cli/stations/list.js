@@ -4,10 +4,10 @@ import { formatTable, formatPaginationHint } from '../utils/format.js';
 
 /** `al-orc stations list` — canonical station definitions from the orchestrator. */
 export async function listStationsHandler(argv) {
-  const { tag, line, json, includeArchived, page, limit } = argv || {};
+  const { tag, line, json, includeArchived: include_archived, page, limit } = argv || {};
 
   const orc = clientFor();
-  const { data, page_context } = await orc.stations.list({ tag, line, include_archived: includeArchived, page, limit });
+  const { data, page_context } = await orc.stations.list({ tag, line, include_archived, page, limit });
   const stations = data || [];
 
   if (json) {
@@ -25,13 +25,13 @@ export async function listStationsHandler(argv) {
     s.id,
     s.name || '—',
     String(s.steps ? s.steps.length : 0),
-    ...(includeArchived ? [s.archived || s.archived_at ? 'yes' : '—'] : []),
+    ...(include_archived ? [s.archived || s.archived_at ? 'yes' : '—'] : []),
   ]);
-  const headers = ['CODE', 'ID', 'NAME', 'STEPS', ...(includeArchived ? ['ARCHIVED'] : [])];
+  const headers = ['CODE', 'ID', 'NAME', 'STEPS', ...(include_archived ? ['ARCHIVED'] : [])];
 
   console.log(formatTable(headers, rows));
   console.log('');
-  console.log(`Total: ${stations.length} stations${includeArchived ? ' (including archived)' : ''}`);
+  console.log(`Total: ${stations.length} stations${include_archived ? ' (including archived)' : ''}`);
 
   const hint = formatPaginationHint(page_context);
   if (hint) console.log(hint);

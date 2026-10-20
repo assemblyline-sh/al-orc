@@ -4,10 +4,10 @@ import { formatTable, formatPaginationHint } from '../utils/format.js';
 
 /** `al-orc lines list` — lines from the orchestrator, with their station codes. */
 export async function listLinesHandler(argv) {
-  const { location, json, includeArchived, page, limit } = argv || {};
+  const { location, json, includeArchived: include_archived, page, limit } = argv || {};
 
   const orc = clientFor();
-  const { data, page_context } = await orc.lines.list({ location, include_archived: includeArchived, page, limit });
+  const { data, page_context } = await orc.lines.list({ location, include_archived, page, limit });
   const lines = data || [];
 
   if (json) {
@@ -26,9 +26,9 @@ export async function listLinesHandler(argv) {
     l.location || '—',
     String(l.stations?.length ?? 0),
     (l.stations || []).map((s) => s.short_code || s.id).join(', ') || '—',
-    ...(includeArchived ? [l.archived_at ? 'yes' : '—'] : []),
+    ...(include_archived ? [l.archived_at ? 'yes' : '—'] : []),
   ]);
-  const headers = ['CODE', 'NAME', 'LOCATION', 'STATIONS', 'MEMBERS', ...(includeArchived ? ['ARCHIVED'] : [])];
+  const headers = ['CODE', 'NAME', 'LOCATION', 'STATIONS', 'MEMBERS', ...(include_archived ? ['ARCHIVED'] : [])];
 
   console.log(formatTable(headers, rows));
   console.log('');
