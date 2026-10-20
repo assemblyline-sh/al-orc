@@ -8,15 +8,15 @@ import { getLinesDir } from '../utils/line-files.js';
  * Convert dependency IDs to short_codes using an id→short_code map.
  * Values without a match pass through unchanged.
  */
-function dependenciesToShortCodes(dependencies, idToShortCode) {
+function dependenciesToShortCodes(dependencies, id_to_short_code) {
   if (!dependencies?.length) return dependencies;
-  return dependencies.map((dep) => idToShortCode.get(dep) || dep);
+  return dependencies.map((dep) => id_to_short_code.get(dep) || dep);
 }
 
 /** Normalize a fetched station for local storage: tags → names, deps → short_codes. */
-function normalizeForLocal(station, idToShortCode) {
+function normalizeForLocal(station, id_to_short_code) {
   if (station.tags) station.tags = station.tags.map((t) => (typeof t === 'string' ? t : t.name));
-  station.dependencies = dependenciesToShortCodes(station.dependencies, idToShortCode);
+  station.dependencies = dependenciesToShortCodes(station.dependencies, id_to_short_code);
   return station;
 }
 
@@ -37,13 +37,13 @@ export async function pullStationsHandler(argv) {
   if (id) {
     console.log(`Saving to: ${getStationsDir()}/`);
     // Single station — also fetch the list for dependency resolution.
-    const [station, allStations] = await Promise.all([orc.stations.get(id), orc.stations.getAll()]);
+    const [station, all_stations] =await Promise.all([orc.stations.get(id), orc.stations.getAll()]);
     if (!station) {
       console.error(`Station not found: ${id}`);
       process.exit(1);
     }
-    const idToShortCode = new Map(allStations.filter((s) => s.short_code).map((s) => [s.id, s.short_code]));
-    const filepath = saveStation(normalizeForLocal(station, idToShortCode));
+    const id_to_short_code = new Map(all_stations.filter((s) => s.short_code).map((s) => [s.id, s.short_code]));
+    const filepath = saveStation(normalizeForLocal(station, id_to_short_code));
     console.log(`Saved: ${filepath}`);
     return;
   }
@@ -61,12 +61,12 @@ export async function pullStationsHandler(argv) {
     console.log('No stations found');
     return;
   }
-  const idToShortCode = new Map(stations.filter((s) => s.short_code).map((s) => [s.id, s.short_code]));
+  const id_to_short_code = new Map(stations.filter((s) => s.short_code).map((s) => [s.id, s.short_code]));
 
   for (const summary of stations) {
     // Fetch full details (the list may omit fields).
     const full = await orc.stations.get(summary.id);
-    const filepath = saveStation(normalizeForLocal(full, idToShortCode));
+    const filepath = saveStation(normalizeForLocal(full, id_to_short_code));
     console.log(`Saved: ${filepath}`);
   }
   console.log('');

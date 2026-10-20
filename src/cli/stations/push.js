@@ -47,15 +47,15 @@ async function resolveDependencies(orc, cache, dependencies) {
 /** Map tag names → ids, creating any that don't exist. Returns { ids, created }. */
 async function resolveTagNamesCreating(orc, names) {
   const { data = [] } = await orc.tags.list();
-  const byName = new Map(data.map((t) => [t.name, t.id]));
+  const by_name = new Map(data.map((t) => [t.name, t.id]));
   const ids = [];
   const created = [];
   for (const name of names) {
-    let id = byName.get(name);
+    let id = by_name.get(name);
     if (!id) {
       const tag = await orc.tags.create({ name });
       id = tag.id;
-      byName.set(name, id);
+      by_name.set(name, id);
       created.push(name);
     }
     ids.push(id);
@@ -67,15 +67,15 @@ async function resolveTagNamesCreating(orc, names) {
  * Sync tags after push. `undefined` = leave untouched; `[]` = clear all;
  * otherwise resolve (auto-creating missing) and replace.
  */
-async function syncTags(orc, stationId, tags) {
+async function syncTags(orc, station_id, tags) {
   if (tags === undefined) return;
   if (tags.length === 0) {
-    await orc.stations.setTags(stationId, []);
+    await orc.stations.setTags(station_id, []);
     console.log('  Tags cleared');
     return;
   }
   const { ids, created } = await resolveTagNamesCreating(orc, tags);
-  await orc.stations.setTags(stationId, ids);
+  await orc.stations.setTags(station_id, ids);
   if (created.length > 0) console.log(`  Auto-created tags: ${created.join(', ')}`);
   console.log(`  Tags synced: ${tags.join(', ')}`);
 }
