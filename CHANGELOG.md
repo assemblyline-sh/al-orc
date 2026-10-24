@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `al-orc login [name]`: sign in through the browser instead of pasting a key and secret.
+  Opens the Orchestrator's approve page (`--no-browser` only prints the URL), waits for
+  approval, saves the new key as a profile named after the org, and makes it current.
+
 ## [0.2.0] - 2026-10-19
 
 ### Fixed

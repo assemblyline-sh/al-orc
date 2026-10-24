@@ -22,6 +22,8 @@ import { buildSupportingDocsSubcommands } from './supporting-docs/index.js';
 import { buildFactorySessionsSubcommands } from './factory-sessions/index.js';
 import { safe, localOptions } from './_helpers.js';
 import { statusHandler } from './status.js';
+import { loginHandler } from './login.js';
+import { DEFAULT_API_URL } from '../http.js';
 
 export function run(argv) {
   return yargs(argv)
@@ -35,6 +37,15 @@ export function run(argv) {
     .middleware((argv) => {
       if (argv.profile) setOrgOverride(argv.profile);
     })
+    .command(
+      'login [name]',
+      'Sign in through the browser and save an API key as a profile',
+      (y) =>
+        localOptions(y.positional('name', { describe: 'Profile name (default: from the org name)', type: 'string' }))
+          .option('api-url', { describe: 'Orchestrator URL (origin only)', type: 'string', default: DEFAULT_API_URL })
+          .option('browser', { describe: 'Open the approve page; --no-browser only prints its URL', type: 'boolean', default: true }),
+      safe(loginHandler),
+    )
     .command('config <resource>', 'Manage credential profiles (alias: orgs)', buildConfigSubcommands)
     .command('lines <action>', 'Manage lines (a line owns the location its stations run at)', buildLinesSubcommands)
     .command('stations <action>', 'Query and run stations (orchestrator definitions)', buildStationsSubcommands)
