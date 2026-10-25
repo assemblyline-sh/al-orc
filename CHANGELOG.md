@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `al-orc --version` shows al-orc's own version when installed from npm. It printed the
+  version of whatever `package.json` was nearest to the install (`unknown`, or e.g. `1.0.0`),
+  because yargs looked it up from the bin link instead of from this package.
+
 ## [0.3.0] - 2026-10-26
 
 ### Added

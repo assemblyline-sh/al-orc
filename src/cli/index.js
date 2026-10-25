@@ -10,6 +10,7 @@
  * is lib-factory's `factory` command. Not here.)
  */
 
+import { readFileSync } from 'node:fs';
 import yargs from 'yargs';
 
 import { setOrgOverride } from './config-store.js';
@@ -24,6 +25,10 @@ import { safe, localOptions } from './_helpers.js';
 import { statusHandler } from './status.js';
 import { loginHandler } from './login.js';
 import { DEFAULT_API_URL } from '../http.js';
+
+// Read from this package, not found by yargs: an installed `al-orc` runs through a bin link,
+// and the walk up from there never reaches this package.json.
+const { version } = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8'));
 
 export function run(argv) {
   return yargs(argv)
@@ -63,7 +68,7 @@ export function run(argv) {
     .strict()
     .help()
     .alias('h', 'help')
-    .version()
+    .version(version)
     .alias('v', 'version')
     // Global options (inherited by every command) render under their own
     // heading; each command's own options stay under "Options:", shown first
