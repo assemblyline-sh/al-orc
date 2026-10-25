@@ -38,10 +38,10 @@ export function run(argv) {
       if (argv.profile) setOrgOverride(argv.profile);
     })
     .command(
-      'login [name]',
-      'Sign in through the browser and save an API key as a profile',
+      'login',
+      'Sign in through the browser, pick orgs, and save one profile per org',
       (y) =>
-        localOptions(y.positional('name', { describe: 'Profile name (default: from the org name)', type: 'string' }))
+        localOptions(y)
           .option('api-url', { describe: 'Orchestrator URL (origin only)', type: 'string', default: DEFAULT_API_URL })
           .option('browser', { describe: 'Open the approve page; --no-browser only prints its URL', type: 'boolean', default: true }),
       safe(loginHandler),
