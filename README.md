@@ -6,12 +6,17 @@ records.
 
 ```bash
 npm install -g @assemblyline/al-orc
-al-orc config profiles add acme --api-key <key> --api-secret <secret>
+al-orc login                                   # pick orgs in the browser; one profile per org
 al-orc status                                  # org and key the profile belongs to
 al-orc lines push --all && al-orc stations push --all   # from a factory repo root
 al-orc stations run EX0
 al-orc work-records list --station EX0
 ```
+
+`al-orc login` opens the Orchestrator's approve page (over SSH, add `--no-browser` and open the
+printed link on any device). Orgs you already have a profile for show as connected; the current
+profile changes only when there was none. To add a key by hand instead:
+`al-orc config profiles add acme --api-key <key> --api-secret <secret>`.
 
 Profiles live in `~/.assemblyline/al-orc/config.yml` (mode 0600; override the folder with
 `AL_ORC_CONFIG_DIR`). The CLI never reads `.env`.
