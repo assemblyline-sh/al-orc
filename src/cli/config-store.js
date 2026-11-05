@@ -12,14 +12,14 @@
  * `credentials`. Single tool, per-org (no per-app nesting).
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync, symlinkSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import yaml from 'js-yaml';
 
 /**
- * The family root, ~/.al. On the first run after the rename from ~/.al
- * the whole folder moves here, keeping a symlink for tools not yet updated.
+ * The family root, ~/.al. On the first run after the rename from ~/.assemblyline
+ * the whole folder moves here.
  * Same move as al-control's familyRoot (its decision 0007).
  * @param {string} [home]
  * @returns {string}
@@ -30,9 +30,8 @@ export function familyRoot(home = homedir()) {
   if (!existsSync(root) && existsSync(legacy)) {
     try {
       renameSync(legacy, root);
-      symlinkSync('.al', legacy);
     } catch {
-      // Another process moved it first, or the OS refused the symlink.
+      // Another process moved it first.
     }
   }
   return root;

@@ -9,7 +9,7 @@ const { familyRoot } = await import('../../src/cli/config-store.js');
 const tempHome = () => mkdtempSync(join(tmpdir(), 'al-orc-home-'));
 
 describe('familyRoot', () => {
-  test('moves ~/.assemblyline to ~/.al and leaves a symlink', () => {
+  test('moves ~/.assemblyline to ~/.al and leaves nothing behind', () => {
     const home = tempHome();
     mkdirSync(join(home, '.assemblyline', 'al-orc'), { recursive: true });
     writeFileSync(join(home, '.assemblyline', 'al-orc', 'config.yml'), 'orgs: {}\n');
@@ -17,8 +17,7 @@ describe('familyRoot', () => {
     expect(familyRoot(home)).toBe(join(home, '.al'));
 
     expect(readFileSync(join(home, '.al', 'al-orc', 'config.yml'), 'utf8')).toBe('orgs: {}\n');
-    expect(lstatSync(join(home, '.assemblyline')).isSymbolicLink()).toBe(true);
-    expect(existsSync(join(home, '.assemblyline', 'al-orc', 'config.yml'))).toBe(true);
+    expect(existsSync(join(home, '.assemblyline'))).toBe(false);
   });
 
   test('leaves both alone when ~/.al already exists', () => {
