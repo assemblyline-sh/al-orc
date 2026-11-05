@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The config root is `~/.al`, not `~/.assemblyline`. The first run moves the folder and leaves a
+  `~/.assemblyline` symlink for tools not yet updated.
+
 ## [0.3.1] - 2026-10-26
 
 ### Fixed

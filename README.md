@@ -18,7 +18,7 @@ printed link on any device). Orgs you already have a profile for show as connect
 profile changes only when there was none. To add a key by hand instead:
 `al-orc config profiles add acme --api-key <key> --api-secret <secret>`.
 
-Profiles live in `~/.assemblyline/al-orc/config.yml` (mode 0600; override the folder with
+Profiles live in `~/.al/al-orc/config.yml` (mode 0600; override the folder with
 `AL_ORC_CONFIG_DIR`). The CLI never reads `.env`.
 
 ## Library

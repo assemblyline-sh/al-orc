@@ -1,9 +1,9 @@
 // @ts-check
 /**
- * CLI credential store — reads/writes ~/.assemblyline/al-orc/config.yml (mode 0600) and
+ * CLI credential store — reads/writes ~/.al/al-orc/config.yml (mode 0600) and
  * resolves which credentials the current command uses.
  *
- * Config lives under the shared family root ~/.assemblyline/ so every al-<tool>
+ * Config lives under the shared family root ~/.al/ so every al-<tool>
  * keeps its config in one place. Path is home-dir based (os.homedir()) for
  * multi-OS support; not XDG. Override the whole dir with AL_ORC_CONFIG_DIR.
  *
@@ -12,12 +12,33 @@
  * `credentials`. Single tool, per-org (no per-app nesting).
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync, symlinkSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import yaml from 'js-yaml';
 
-const CONFIG_DIR = process.env.AL_ORC_CONFIG_DIR || join(homedir(), '.assemblyline', 'al-orc');
+/**
+ * The family root, ~/.al. On the first run after the rename from ~/.al
+ * the whole folder moves here, keeping a symlink for tools not yet updated.
+ * Same move as al-control's familyRoot (its decision 0007).
+ * @param {string} [home]
+ * @returns {string}
+ */
+export function familyRoot(home = homedir()) {
+  const root = join(home, '.al');
+  const legacy = join(home, '.assemblyline');
+  if (!existsSync(root) && existsSync(legacy)) {
+    try {
+      renameSync(legacy, root);
+      symlinkSync('.al', legacy);
+    } catch {
+      // Another process moved it first, or the OS refused the symlink.
+    }
+  }
+  return root;
+}
+
+const CONFIG_DIR = process.env.AL_ORC_CONFIG_DIR || join(familyRoot(), 'al-orc');
 const CONFIG_PATH = join(CONFIG_DIR, 'config.yml');
 
 let org_override = null;

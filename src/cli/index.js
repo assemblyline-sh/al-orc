@@ -5,7 +5,7 @@
  *   al-orc <resource> <action> [target] [options]
  *
  * The orchestrator control plane (canonical line and station definitions, work
- * records, tags, supporting docs). Credentials come from ~/.assemblyline/al-orc/config.yml;
+ * records, tags, supporting docs). Credentials come from ~/.al/al-orc/config.yml;
  * `config` manages them. (Bins and pm2 live in `al-control`; running a step
  * is lib-factory's `factory` command. Not here.)
  */
